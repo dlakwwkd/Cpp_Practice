@@ -10,6 +10,19 @@
 #include <stdio.h>
 #include <tchar.h>
 
-
-
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
+#include <iostream>
+#include <vector>
+#include <string>
+#include <windows.h>
+#include <conio.h>
+#include <time.h>
+
+#include "unit.h"
+#include "ui.h"
+#include "command.h"
+#include "console.h"
+#include "play.h"
+#include "setting.h"
+#include "ai.h"
+
