@@ -25,4 +25,6 @@
 #include "play.h"
 #include "setting.h"
 #include "ai.h"
+#include "print.h"
+
 

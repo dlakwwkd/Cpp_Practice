@@ -56,6 +56,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,6 +84,7 @@
     <ClInclude Include="command.h" />
     <ClInclude Include="console.h" />
     <ClInclude Include="play.h" />
+    <ClInclude Include="print.h" />
     <ClInclude Include="setting.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -94,6 +96,7 @@
     <ClCompile Include="command.cpp" />
     <ClCompile Include="console.cpp" />
     <ClCompile Include="play.cpp" />
+    <ClCompile Include="print.cpp" />
     <ClCompile Include="setting.cpp" />
     <ClCompile Include="ui.cpp" />
     <ClCompile Include="stdafx.cpp">

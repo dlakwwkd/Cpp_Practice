@@ -17,8 +17,8 @@ void gamePlayLoop(void)
 	respawne();
 	while (gamePlay)
 	{
-		//system("cls");
-		//mouse_input(to_x, to_y);
+		Print::get().printText();
+		Print::get().init();
 
 		if (_kbhit())
 		{
@@ -29,6 +29,5 @@ void gamePlayLoop(void)
 
 		moveAi();
 
-		Sleep(10);
 	}
 }

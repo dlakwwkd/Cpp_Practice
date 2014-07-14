@@ -32,47 +32,38 @@ int c = sizeof(heroList) / sizeof(std::string);
 
 void mainMenuPrint(int menu)
 {
-	system("cls");
+	Print::get().init();
 	for (int i = 0; i < mainMenuNum; i++)
 	{
-		gotoxy(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i);
-		if (menu == i + 1){
-			setcolor(10, 0);
-			std::cout << mainMenuList[i] << std::endl;
-			setcolor(15, 0);
-		}
-		else std::cout << mainMenuList[i] << std::endl;
+		if (menu == i + 1) Print::get().inColor(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, 10);
+		else Print::get().inColor(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, 0);
+		Print::get().inText(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, mainMenuList[i]);
 	}
+	Print::get().printText();
 }
 
 void modeMenuPrint(int menu)
 {
-	system("cls");
+	Print::get().init();
 	for (int i = 0; i < modeMenuNum; i++)
 	{
-		gotoxy(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i);
-		if (menu == i + 1){
-			setcolor(10, 0);
-			std::cout << modeMenuList[i] << std::endl;
-			setcolor(15, 0);
-		}
-		else std::cout << modeMenuList[i] << std::endl;
+		if (menu == i + 1) Print::get().inColor(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, 10);
+		else Print::get().inColor(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, 0);
+		Print::get().inText(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, modeMenuList[i]);
 	}
+	Print::get().printText();
 }
 
 void heroListPrint(int menu)
 {
-	system("cls");
+	Print::get().init();
 	for (int i = 0; i < heroListNum; i++)
 	{
-		gotoxy(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i);
-		if (menu == i + 1){
-			setcolor(10, 0);
-			std::cout << heroList[i] << std::endl;
-			setcolor(15, 0);
-		}
-		else std::cout << heroList[i] << std::endl;
+		if (menu == i + 1) Print::get().inColor(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, 10);
+		else Print::get().inColor(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, 0);
+		Print::get().inText(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, heroList[i]);
 	}
+	Print::get().printText();
 }
 
 void closeMessage(void)

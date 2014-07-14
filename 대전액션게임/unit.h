@@ -14,6 +14,7 @@ protected:
 	static int y_up;
 	static int y_down;
 
+	double to_x, to_y;
 	std::string name;
 	std::string shape;
 	COORD pos_unit;
@@ -31,7 +32,7 @@ public:
 	Unit(const Unit &pc);
 	~Unit();
 
-	void move(int x, int y);
+	void move(void);
 	void ai(int &x, int &y);
 	void release(void);
 	int attack();

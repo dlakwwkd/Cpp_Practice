@@ -9,10 +9,12 @@ int Unit::x_right = 0;
 int Unit::y_up = 0;
 int Unit::y_down = 0;
 
-Unit::Unit() : name("unit"), shape("¡Ý"), pos_unit({ 0, 0 }), move_speed(10), hp(100), damage(10), is_dead(false){ mob_num++; }
-Unit::Unit(int x, int y) : name("unit"), shape("¡Ý"), pos_unit({ x, y }), move_speed(10), hp(100), damage(10), is_dead(false){ mob_num++; }
+Unit::Unit() : to_x(0), to_y(0), name("unit"), shape("¢¿"), pos_unit({ 0, 0 }), move_speed(10), hp(100), damage(10), is_dead(false){ mob_num++; }
+Unit::Unit(int x, int y) : to_x(0), to_y(0), name("unit"), shape("¢Æ"), pos_unit({ x, y }), move_speed(10), hp(100), damage(10), is_dead(false){ mob_num++; }
 Unit::Unit(const Unit &pc)
 {
+	to_x = pc.to_x;
+	to_y = pc.to_y;
 	name = pc.name;
 	shape = pc.shape;
 	pos_unit = pc.pos_unit;
@@ -104,30 +106,47 @@ Inyo::~Inyo()
 
 
 
-void Unit::move(int x, int y)
+void Unit::move(void)
 {
 
-	if (pos_unit.X < x)
+	static double x = pos_unit.X;
+	static double y = pos_unit.Y;
+
+	if (to_x > 1 || to_x < -1) to_x -= to_x / 5;
+	else to_x = 0;
+
+	if (to_y > 1 || to_y < -1) to_y -= to_y / 5;
+	else to_y = 0;
+
+	if (to_x)
 	{
-		pos_unit.X += 2;
+		x += to_x / 5;
+
+		if (x < 0)
+			x = 0;
+		else if (x > PLAY_COLS)
+			x = PLAY_COLS;
 	}
-	else if (pos_unit.X > x)
+	if (to_y)
 	{
-		pos_unit.X -= 2;
+		y += to_y / 5;
+
+		if (y < 0)
+			y = 0;
+		else if (y > PLAY_LINES)
+			y = PLAY_LINES;
 	}
-	if (pos_unit.Y < y)
-	{
-		pos_unit.Y++;
-	}
-	else if (pos_unit.Y > y)
-	{
-		pos_unit.Y--;
-	}
+	pos_unit.X = (int)x;
+	pos_unit.Y = (int)y;
+	show_pos();
 }
 void Unit::ai(int &x, int &y)
 {
 	x = rand() % PLAY_COLS;
 	y = rand() % PLAY_LINES;
+
+	to_x = (x - pos_unit.X) * move_speed / 50;
+	to_y = (y - pos_unit.Y) * move_speed / 50;
 }
 int Unit::attack()
 {
@@ -152,14 +171,12 @@ void Unit::release(void)
 void Unit::show_pos()
 {
 	if (is_dead) return;
-	gotoxy(pos_unit.X, pos_unit.Y);
-	std::cout << shape;
+	Print::get().inText(pos_unit.X, pos_unit.Y, shape);
 }
 void Unit::delete_pos()
 {
 	if (is_dead) return;
-	gotoxy(pos_unit.X, pos_unit.Y);
-	std::cout << "  ";
+	Print::get().inText(pos_unit.X, pos_unit.Y, "  ");
 }
 
 
@@ -211,8 +228,6 @@ void Hero::move_action(void)
 		else if (y > PLAY_LINES)
 			y = PLAY_LINES;
 	}
-
-	delete_pos();
 	pos_unit.X = (int)x;
 	pos_unit.Y = (int)y;
 	show_pos();
@@ -227,20 +242,20 @@ void Hero::skill_z(void)
 	y_down = pos_unit.Y + 2;
 
 	gotoxy(x_left, y_up + 1); setcolor(12, 0);
-	std::cout << "¢É¢É¢É¢É¢É"; setcolor(15, 0);
+	printf("¢É¢É¢É¢É¢É"); setcolor(15, 0);
 	gotoxy(x_left, pos_unit.Y); setcolor(12, 0);
-	std::cout << "¢É¢É¢É¢É¢É"; setcolor(15, 0);
+	printf("¢É¢É¢É¢É¢É"); setcolor(15, 0);
 	gotoxy(x_left, y_down - 1); setcolor(12, 0);
-	std::cout << "¢É¢É¢É¢É¢É"; setcolor(15, 0);
+	printf("¢É¢É¢É¢É¢É"); setcolor(15, 0);
 
-	Sleep(50);
+	Sleep(10);
 
 	gotoxy(x_left - 1, y_up); setcolor(12, 0);
-	std::cout << "  ¢Æ¢Æ¢Æ¢Æ  "; setcolor(15, 0);
+	printf("  ¢Æ¢Æ¢Æ¢Æ  "); setcolor(15, 0);
 	gotoxy(x_left - 1, pos_unit.Y); setcolor(12, 0);
-	std::cout << "¢Æ¢Æ¡Ø¡Ø¢Æ¢Æ"; setcolor(15, 0);
+	printf("¢Æ¢Æ¡Ø¡Ø¢Æ¢Æ"); setcolor(15, 0);
 	gotoxy(x_left - 1, y_down); setcolor(12, 0);
-	std::cout << "  ¢Æ¢Æ¢Æ¢Æ  "; setcolor(15, 0);
+	printf("  ¢Æ¢Æ¢Æ¢Æ  "); setcolor(15, 0);
 
 	for (int i = 0; i < mob_num; i++)
 	{
@@ -248,18 +263,18 @@ void Hero::skill_z(void)
 			mob.at(i).be_attacked(50);
 		}
 	}
-	Sleep(50);
+	Sleep(20);
 
 	gotoxy(x_left - 1, y_up);
-	std::cout << "           ";
+	printf("           ");
 	gotoxy(x_left - 1, y_up + 1);
-	std::cout << "           ";
+	printf("           ");
 	gotoxy(x_left - 1, pos_unit.Y);
-	std::cout << "           ";
+	printf("           ");
 	gotoxy(x_left - 1, y_down - 1);
-	std::cout << "           ";
+	printf("           ");
 	gotoxy(x_left - 1, y_down);
-	std::cout << "           ";
+	printf("           ");
 
 
 	skill_z_on = 0;

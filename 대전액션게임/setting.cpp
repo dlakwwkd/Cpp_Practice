@@ -163,7 +163,7 @@ void heroCreate(void)
 
 void respawne(void)
 {
-	for (int i = 0; i < 20; i++){
+	for (int i = 0; i < 100; i++){
 		Unit m;
 		mob.push_back(m);
 	}
