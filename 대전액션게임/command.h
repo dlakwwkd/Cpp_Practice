@@ -14,9 +14,7 @@
 #define LEFT_KEY	75
 #define RIGHT_KEY	77
 
-
 void inputKey(int input);
 void selectHero(void);
-
 
 #endif

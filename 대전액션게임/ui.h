@@ -6,15 +6,14 @@
 
 #include "stdafx.h"
 
-extern int a, b, c;
-
-static int mainMenuNum = a;
-static int modeMenuNum = b;
-static int heroListNum = c;
+extern int mainMenuNum, modeMenuNum, heroListNum;
 
 void mainMenuPrint(int menu);
 void modeMenuPrint(int menu);
 void heroListPrint(int menu);
+
+void status(void);
+
 
 void closeMessage(void);
 

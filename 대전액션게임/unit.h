@@ -14,10 +14,15 @@ protected:
 	static int y_up;
 	static int y_down;
 
-	double to_x, to_y;
+	static double move_x_public;
+	static double move_y_public;
+	int pos_x, pos_y;
+	int to_x, to_y;
+	double move_x, move_y;
+	double to_x_power, to_y_power;
+
 	std::string name;
 	std::string shape;
-	COORD pos_unit;
 
 	double move_speed;
 	int hp;
@@ -25,36 +30,35 @@ protected:
 	bool is_dead;
 
 public:
-	static int mob_num;
-
 	Unit();
 	Unit(int x, int y);
 	Unit(const Unit &pc);
 	~Unit();
 
+	void print(void);
 	void move(void);
-	void ai(int &x, int &y);
+	void move_boss(void);
+	void ai(void);
+	void ai_boss(void);
 	void release(void);
 	int attack();
 	void be_attacked(int damage_earn);
 	int hit(void);
 	void show_pos();
-	void delete_pos();
 };
 
 class Hero : public Unit
 {
 protected:
 	int skill_z_on;
-	double to_x, to_y;
 
 public:
 	Hero();
 	Hero(int x, int y);
 	~Hero();
 
+	void hp_status(void);
 	void move_input(int input_key);
-	void move_action(void);
 	void skill_z(void);
 	void skill_on(int skill);
 };

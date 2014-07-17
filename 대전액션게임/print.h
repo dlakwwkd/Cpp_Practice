@@ -20,10 +20,9 @@ public:
 
 	void inColor(int x, int y, int color);
 	void inText(int x, int y, std::string text);
-
 	void init(void);
 	void printText(void);
-
+	void frameCheck(void);
 
 private:
 	Print();

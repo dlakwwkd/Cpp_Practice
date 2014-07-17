@@ -3,18 +3,23 @@
 
 #include "stdafx.h"
 
+int gameFrame;
 int gameRun;
 int gamePlay;
 int gameMode;
 int heroType;
+int mobNumber;
+unsigned int gameTime;
 
 std::vector<Hero> player;
 std::vector<Unit> mob;
 
 void initPlay(void)
 {
-	srand((int)time(NULL));
-	gameRun = ON;
+	srand((unsigned int)time(NULL));
+	gameTime = (unsigned int)time(NULL);
+	gameFrame = 0;
+	mobNumber = 100;
 }
 
 void mainMenu(void)
@@ -61,7 +66,6 @@ void mainMenu(void)
 	}
 	return;
 }
-
 void selectMode(int input)
 {
 	int menu = 1;
@@ -104,8 +108,6 @@ void selectMode(int input)
 	}
 	return;
 }
-
-
 void selectHero(void)
 {
 	int input;
@@ -139,6 +141,7 @@ void selectHero(void)
 				}
 				heroType = menu;
 				heroCreate();
+				status();
 				gamePlay = ON;
 				return;
 			case ESC_KEY:
@@ -163,7 +166,8 @@ void heroCreate(void)
 
 void respawne(void)
 {
-	for (int i = 0; i < 100; i++){
+	for (int i = 0; i < mobNumber; i++)
+	{
 		Unit m;
 		mob.push_back(m);
 	}

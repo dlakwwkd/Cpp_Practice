@@ -15,10 +15,13 @@
 #define TYPE1 1
 #define TYPE2 2
 
+extern int gameFrame;
 extern int gameRun;
 extern int gamePlay;
 extern int gameMode;
 extern int heroType;
+extern int mobNumber;
+extern unsigned int gameTime;
 
 extern std::vector<Hero> player;
 extern std::vector<Unit> mob;

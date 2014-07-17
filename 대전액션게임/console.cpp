@@ -5,7 +5,7 @@
 
 void initConsole(void)
 {
-	system("mode con: lines=41 cols=120");
+	system("mode con: lines=45 cols=120");
 }
 
 void gotoxy(int x, int y)
@@ -14,9 +14,7 @@ void gotoxy(int x, int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
-void setcolor(int color, int bgcolor)
+void setcolor(int color)
 {
-	color &= 0xf;
-	bgcolor &= 0xf;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (bgcolor << 4) | color);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }

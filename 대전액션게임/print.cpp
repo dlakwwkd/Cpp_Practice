@@ -33,7 +33,7 @@ void Print::inColor(int x, int y, int color)
 
 void Print::inText(int x, int y, std::string text)
 {
-	for (int i = x; i < x + text.length(); i++)
+	for (unsigned int i = x; i < x + text.length(); i++)
 	{
 		screenBuffer[y][i] = text[i - x];
 	}
@@ -57,18 +57,47 @@ void Print::init()
 
 void Print::printText()
 {
-	int y;
-	
+	int x, y;
+
 	gotoxy(0, 0);
-	
-	for (y = 0; y < CONSOLE_LINES; y++)
+
+	BAR_COLOR;
+	printf("%s", screenBuffer[0]);
+	DEF_COLOR;
+
+	for (y = 1; y <= PLAY_LINES; y++)
 	{
-		if (colorBuffer[y][CONSOLE_COLS] == 1)
+		if (colorBuffer[y][CONSOLE_COLS])
 		{
-			setcolor(14, 5);
-			printf("%s", screenBuffer[y]);
-			setcolor(15, 0);
+			for (x = 0; x < CONSOLE_COLS; x++)
+			{
+				if (colorBuffer[y][x])
+					setcolor(colorBuffer[y][x]);
+				printf("%c", screenBuffer[y][x]);
+			}
 		}
 		else printf("%s", screenBuffer[y]);
+	}
+
+	BAR_COLOR;
+	printf("%s", screenBuffer[y++]);
+	printf("%s", screenBuffer[y++]);
+	printf("%s", screenBuffer[y++]);
+	printf("%s", screenBuffer[y++]);
+	DEF_COLOR;
+}
+
+void Print::frameCheck()
+{
+	gameFrame++;
+	if (time(NULL) - gameTime >= 1){
+		printf("Frame: %d \t\t\t\t\t\t\t\t\t\t\t\t\t  ", gameFrame);
+		gameTime = (unsigned int)time(NULL);
+		gameFrame = 0;
+	}
+	if (gameFrame > 60){
+		Sleep(10);
+		printf("Frame: %d \t\t\t\t\t\t\t\t\t\t\t\t\t  ", gameFrame);
+		gameFrame -= 10; 
 	}
 }

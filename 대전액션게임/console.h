@@ -6,17 +6,19 @@
 
 #include "stdafx.h"
 
-#define CONSOLE_LINES 40
+#define CONSOLE_LINES 44
 #define CONSOLE_COLS 120
 
-#define PLAY_LINES (CONSOLE_LINES-2)
+#define PLAY_LINES (CONSOLE_LINES-5)
 #define PLAY_COLS (CONSOLE_COLS-2)
+
+#define DEF_COLOR setcolor(15);
+#define BAR_COLOR setcolor(62);
 
 
 void initConsole(void);
 
 void gotoxy(int x, int y);
-void setcolor(int color, int bgcolor);
-//void mouse_input(int& x, int& y);
+void setcolor(int color);
 
 #endif

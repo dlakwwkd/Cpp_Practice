@@ -14,20 +14,23 @@ void gameRunLoop(void)
 
 void gamePlayLoop(void)
 {
+	initPlay();
 	respawne();
 	while (gamePlay)
 	{
 		Print::get().printText();
 		Print::get().init();
+		Print::get().frameCheck();
 
 		if (_kbhit())
 		{
 			inputKey(_getch());
 		}
-		player.at(0).move_action();
+		player.at(0).move();
+		player.at(0).show_pos();
 		player.at(0).skill_z();
 
-		moveAi();
+		moveAiBoss();
 
 	}
 }

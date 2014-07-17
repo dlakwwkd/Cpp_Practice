@@ -5,14 +5,12 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	argc;
-	argv;
+	argc; argv;
+
+	gameRun = ON;
 
 	initConsole();
-	initPlay();
-
 	gameRunLoop();
-
 	closeMessage();
 	return 0;
 }

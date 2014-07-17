@@ -8,7 +8,7 @@ void inputKey(int input)
 	switch (input)
 	{
 	case ENTER_KEY:
-		for (int i = 0; i < mob.size(); i++){
+		for (unsigned int i = 0; i < mob.size(); i++){
 			mob.at(i).release();
 		}
 		break;

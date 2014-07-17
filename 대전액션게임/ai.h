@@ -7,6 +7,6 @@
 #include "stdafx.h"
 
 void moveAi(void);
-
+void moveAiBoss(void);
 
 #endif
