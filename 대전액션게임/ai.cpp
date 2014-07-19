@@ -5,27 +5,38 @@
 
 void moveAi(void)
 {
+	if (mob.size() == 0) return;
 	static unsigned int i;
 	
-	for (i = 0; i < mob.size(); i++)
+	switch (gameMode)
 	{
-		if (rand() % 20 == 1)
-			mob.at(i).ai();
-		mob.at(i).move();
-		mob.at(i).show_pos();
+	case MODE1:
+		break;
+	case MODE2:
+		i = rand() % mob.size();
+		mob.at(i).ai(50);
+		break;
 	}
-}
-void moveAiBoss(void)
-{
-	static unsigned int i;
-
-	i = rand() % mob.size();
-	mob.at(i).ai_boss();
 
 	for (i = 0; i < mob.size(); i++)
 	{
-		if (rand() % 10 == 1)
-			mob.at(i).move_boss();
+		switch (gameMode)
+		{
+		case MODE1:
+			if (rand() % 20 == 0)
+				mob.at(i).ai(20);
+			mob.at(i).move_action(mob.at(i).move);
+			break;
+		case MODE2:
+			if (rand() % (mob.size() / 10 + 1) == 0)
+				mob.at(i).move_action(mob.at(i).public_move);
+			break;
+		}
+
 		mob.at(i).show_pos();
+
+		if (player.at(0).delay == 0)
+			player.at(0).be_attacked(mob.at(i).attack());
+		if (mob.at(i).is_dead) mob.erase(mob.begin() + i);
 	}
 }

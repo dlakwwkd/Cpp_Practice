@@ -22,11 +22,13 @@ public:
 	void inText(int x, int y, std::string text);
 	void init(void);
 	void printText(void);
+	void printTop(void);
+	void printBottom(void);
+
 	void frameCheck(void);
 
 private:
 	Print();
-	~Print();
 };
 
 

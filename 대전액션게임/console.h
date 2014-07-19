@@ -6,14 +6,15 @@
 
 #include "stdafx.h"
 
-#define CONSOLE_LINES 44
-#define CONSOLE_COLS 120
+#define CONSOLE_LINES 42
+#define CONSOLE_COLS 100
 
-#define PLAY_LINES (CONSOLE_LINES-5)
+#define PLAY_LINES (CONSOLE_LINES-6)
 #define PLAY_COLS (CONSOLE_COLS-2)
 
-#define DEF_COLOR setcolor(15);
-#define BAR_COLOR setcolor(62);
+#define DEF_COLOR 10
+#define TOP_COLOR 63
+#define BAR_COLOR 63
 
 
 void initConsole(void);

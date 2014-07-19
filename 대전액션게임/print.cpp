@@ -7,7 +7,7 @@ Print::Print()
 {
 	int x, y;
 
-	for (y = 0; y < CONSOLE_LINES; y++)
+	for (y = 0; y <= PLAY_LINES; y++)
 	{
 		for (x = 0; x < CONSOLE_COLS; x++)
 		{
@@ -19,16 +19,10 @@ Print::Print()
 	}
 }
 
-Print::~Print()
-{
-
-}
-
 void Print::inColor(int x, int y, int color)
 {
 	colorBuffer[y][x] = color;
-	if (color) colorBuffer[y][CONSOLE_COLS] = 1;
-	else colorBuffer[y][CONSOLE_COLS] = 0;
+	colorBuffer[y][CONSOLE_COLS] = 1;
 }
 
 void Print::inText(int x, int y, std::string text)
@@ -43,7 +37,7 @@ void Print::init()
 {
 	int x, y;
 
-	for (y = 0; y < CONSOLE_LINES; y++)
+	for (y = 0; y <= PLAY_LINES; y++)
 	{
 		for (x = 0; x < CONSOLE_COLS; x++)
 		{
@@ -59,13 +53,9 @@ void Print::printText()
 {
 	int x, y;
 
-	gotoxy(0, 0);
+	gotoxy(0, 1);
 
-	BAR_COLOR;
-	printf("%s", screenBuffer[0]);
-	DEF_COLOR;
-
-	for (y = 1; y <= PLAY_LINES; y++)
+	for (y = 0; y <= PLAY_LINES; y++)
 	{
 		if (colorBuffer[y][CONSOLE_COLS])
 		{
@@ -73,31 +63,67 @@ void Print::printText()
 			{
 				if (colorBuffer[y][x])
 					setcolor(colorBuffer[y][x]);
-				printf("%c", screenBuffer[y][x]);
+				_putch(screenBuffer[y][x]);
 			}
+			setcolor(DEF_COLOR);
 		}
 		else printf("%s", screenBuffer[y]);
 	}
+}
 
-	BAR_COLOR;
-	printf("%s", screenBuffer[y++]);
-	printf("%s", screenBuffer[y++]);
-	printf("%s", screenBuffer[y++]);
-	printf("%s", screenBuffer[y++]);
-	DEF_COLOR;
+void Print::printTop()
+{
+	gotoxy(0, 0);
+	setcolor(TOP_COLOR);
+	if (player.empty())
+		printf("\t\t\t\t\t\t\t\t\t\t\t\t\t");
+	else
+	{
+		printf("   Stage%4d   \t\t    ENTER: 다음 라운드         ESC: 처음으로   \t\t     남은 생명: %d   ",
+			gameStage, player.at(0).heart);
+	}
+	setcolor(DEF_COLOR);
+	
+}
+
+void Print::printBottom()
+{
+	gotoxy(0, PLAY_LINES + 2);
+	setcolor(BAR_COLOR);
+	printf("\t\t\t\t\t\t\t\t\t\t\t\t\t");
+	setcolor(249);
+	if (player.empty())
+	{
+		printf("\t\t\t\t\t\t\t\t\t\t\t\t\t");
+		printf("\t\t\t\t\t\t\t\t\t\t\t\t\t");
+	}
+	else
+	{
+		player.at(0).hp_status();
+		player.at(0).mp_status();
+	}
+	setcolor(BAR_COLOR);
+	printf("\t\t\t\t\t\t\t\t\t\t\t\t\t");
+	setcolor(DEF_COLOR);
 }
 
 void Print::frameCheck()
 {
 	gameFrame++;
 	if (time(NULL) - gameTime >= 1){
-		printf("Frame: %d \t\t\t\t\t\t\t\t\t\t\t\t\t  ", gameFrame);
+		printTop();
+		printBottom();
+		gotoxy(0, CONSOLE_LINES);
+		setcolor(15);
+		printf("Frame: %d   mob:%5d\t\t\t\t\t\t\t\t\t\t   ", gameFrame, mob.size());
+		setcolor(DEF_COLOR);
 		gameTime = (unsigned int)time(NULL);
 		gameFrame = 0;
 	}
 	if (gameFrame > 60){
-		Sleep(10);
-		printf("Frame: %d \t\t\t\t\t\t\t\t\t\t\t\t\t  ", gameFrame);
-		gameFrame -= 10; 
+		printTop();
+		printBottom();
+		Sleep(5);
+		gameFrame -= 5;
 	}
 }

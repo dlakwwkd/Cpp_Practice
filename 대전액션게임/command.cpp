@@ -5,20 +5,56 @@
 
 void inputKey(int input)
 {
+	Print::get().printTop();
+	Print::get().printBottom();
 	switch (input)
 	{
+	case ESC_KEY:
+		player.clear();
+		mob.clear();
+		system("cls");
+		gamePlay = OFF;
+		break;
 	case ENTER_KEY:
-		for (unsigned int i = 0; i < mob.size(); i++){
-			mob.at(i).release();
+		if (!mob.size())
+		{
+			gameStage++;
+			mobNumber += 5;
+			respawne();
 		}
 		break;
 	case SCAN_CODE:
 		input = _getch();
 		player.at(0).move_input(input);
 		break;
+	case 'x':
 	case 'z':
-		player.at(0).skill_on('z');
-
+	case 'c':
+	case 'v':
+		if (dummy.empty())
+			player.at(0).skill_on(input);
+		break;
 	}
 }
 
+void inputKey2(int input)
+{
+	Print::get().printTop();
+	Print::get().printBottom();
+	switch (input)
+	{
+	case 'x':
+	case ESC_KEY:
+		dummy.pop();
+		designateMode = OFF;
+		break;
+	case SCAN_CODE:
+		input = _getch();
+		dummy.front().move_input(input);
+		break;
+	case 'z':
+	case 'c':
+		player.at(0).skill_on(input);
+		break;
+	}
+}

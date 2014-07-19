@@ -5,7 +5,7 @@
 
 void initConsole(void)
 {
-	system("mode con: lines=45 cols=120");
+	system("mode con: lines=43 cols=100");
 }
 
 void gotoxy(int x, int y)

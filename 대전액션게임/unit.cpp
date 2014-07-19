@@ -1,280 +1,94 @@
-// unit.cpp : Unit 클래스와 그 자식 클래스들을 정의합니다.
+// unit.cpp : Unit 클래스를 정의합니다.
 //
 
 #include "stdafx.h"
 
-int Unit::x_left = 0;
-int Unit::x_right = 0;
-int Unit::y_up = 0;
-int Unit::y_down = 0;
-double Unit::move_x_public = 0;
-double Unit::move_y_public = 1;
+POINT_D Unit::public_move = { 0, 0 };
 
-Unit::Unit() : pos_x(0), pos_y(1), move_x(0), move_y(1), to_x(0), to_y(0), to_x_power(0), to_y_power(0),
-	name("unit"), shape("><"), move_speed(10), hp(100), damage(10), is_dead(false){}
+Unit::Unit() : pos({ 0, 0 }), to_pos({ 0, 0 }), move({ 0, 0 }), move_power({ 0, 0 }),
+name("unit"), shape("><"), speed(10), hp(20), mp(10), damage(5), is_dead(false){}
 
-Unit::Unit(int x, int y) : pos_x(x), pos_y(y), move_x(0), move_y(1), to_x(0), to_y(0), to_x_power(0), to_y_power(0),
-	name("unit"), shape("><"), move_speed(10), hp(100), damage(10), is_dead(false){}
+Unit::Unit(std::string name, std::string shape, double speed, int hp, int mp, int damage) : 
+pos({ 0, 0 }), to_pos({ 0, 0 }), move({ 0, 0 }), move_power({ 0, 0 }),
+name(name), shape(shape), speed(speed), hp(hp), mp(mp), damage(damage), is_dead(false){}
 
-Unit::Unit(const Unit &pc)
-{
-	pos_x = pc.pos_x;
-	pos_y = pc.pos_y;
-	move_x = pc.move_x;
-	move_y = pc.move_y;
-	to_x = pc.to_x;
-	to_y = pc.to_y;
-	to_x_power = pc.to_x_power;
-	to_y_power = pc.to_y_power;
-	name = pc.name;
-	shape = pc.shape;
-	move_speed = pc.move_speed;
-	hp = pc.hp;
-	damage = pc.damage;
-	is_dead = pc.is_dead;
-}
+Unit::Unit(const Unit &pc) : pos(pc.pos), to_pos(pc.to_pos), move(pc.move), move_power(pc.move_power),
+name(pc.name), shape(pc.shape), speed(pc.speed), hp(pc.hp), mp(pc.mp), damage(pc.damage), is_dead(pc.is_dead){}
+
 Unit::~Unit()
 {
 }
 
-
-
-Hero::Hero() : Unit()
+void Unit::show_pos()
 {
-	name = "Hero";
-	shape = "◆";
-	move_speed = 12;
-	hp = 200;
-	damage = 20;
-
-	skill_z_on = 0;
-}
-
-Hero::Hero(int x, int y) : Unit()
-{
-	name = "Hero";
-	shape = "◆";
-	pos_x = x;
-	pos_y = y;
-	move_speed = 12;
-	hp = 200;
-	damage = 20;
-
-	skill_z_on = 0;
-}
-
-
-Hero::~Hero()
-{
-}
-
-
-
-Inyo::Inyo() : Hero()
-{
-	name = "Inyo";
-	shape = "◈";
-	move_speed = 12;
-	hp = 200;
-	damage = 20;
-
-	skill_z_on = 0;
-}
-
-Inyo::Inyo(int x, int y) : Hero()
-{
-	name = "Inyo";
-	shape = "◈";
-	pos_x = x;
-	pos_y = y;
-	move_speed = 12;
-	hp = 200;
-	damage = 20;
-
-	skill_z_on = 0;
-}
-
-
-Inyo::~Inyo()
-{
-}
-
-
-void Unit::print(void)
-{
-	printf("%d", pos_x);
-}
-
-void Unit::move(void)
-{
-	if (to_x_power > 1 || to_x_power < -1) to_x_power -= to_x_power / 10;
-	else to_x_power = 0;
-
-	if (to_y_power > 1 || to_y_power < -1) to_y_power -= to_y_power / 10;
-	else to_y_power = 0;
-
-	if (to_x_power)
+	if (is_dead) return;
+	if (name == "Inyo")
 	{
-		move_x += to_x_power / 5;
-
-		if (move_x < 0)
-			move_x = 0;
-		else if (move_x > PLAY_COLS)
-			move_x = PLAY_COLS;
+		Print::get().inColor(pos.x, pos.y, 14);
+		Print::get().inColor(pos.x + 2, pos.y, DEF_COLOR);
 	}
-	if (to_y_power)
+	else if (shape == "+")
 	{
-		move_y += to_y_power / 5;
-
-		if (move_y < 1)
-			move_y = 1;
-		else if (move_y > PLAY_LINES)
-			move_y = PLAY_LINES;
+		Print::get().inColor(pos.x, pos.y, 11);
+		Print::get().inColor(pos.x + 1, pos.y, DEF_COLOR);
 	}
-	pos_x = (int)move_x;
-	pos_y = (int)move_y;
+	Print::get().inText(pos.x, pos.y, shape);
 }
-void Unit::move_boss(void)
+void Unit::ai(int reduce)
 {
-	if (to_x_power > 1 || to_x_power < -1) to_x_power -= to_x_power / 5;
-	else to_x_power = 0;
+	to_pos.x = rand() % PLAY_COLS;
+	to_pos.y = rand() % PLAY_LINES;
 
-	if (to_y_power > 1 || to_y_power < -1) to_y_power -= to_y_power / 5;
-	else to_y_power = 0;
+	move_power.x = (to_pos.x - pos.x) * speed / reduce;
+	move_power.y = (to_pos.y - pos.y) * speed / reduce;
+}
+void Unit::move_action(POINT_D &move)
+{
+	if (move_power.x > 1 || move_power.x < -1) move_power.x -= move_power.x / 16;
+	else move_power.x = 0;
 
-	if (to_x_power)
+	if (move_power.y > 1 || move_power.y < -1) move_power.y -= move_power.y / 16;
+	else move_power.y = 0;
+
+	if (move_power.x)
 	{
-		move_x_public += to_x_power / 5;
+		move.x += move_power.x / 8;
 
-		if (move_x_public < 0)
-			move_x_public = 0;
-		else if (move_x_public > PLAY_COLS)
-			move_x_public = PLAY_COLS;
+		if (move.x < 0)
+			move.x = 0;
+		else if (move.x > PLAY_COLS)
+			move.x = PLAY_COLS;
 	}
-	if (to_y_power)
+	if (move_power.y)
 	{
-		move_y_public += to_y_power / 5;
+		move.y += move_power.y / 8;
 
-		if (move_y_public < 1)
-			move_y_public = 1;
-		else if (move_y_public > PLAY_LINES)
-			move_y_public = PLAY_LINES;
+		if (move.y < 0)
+			move.y = 0;
+		else if (move.y > PLAY_LINES)
+			move.y = PLAY_LINES;
 	}
-	pos_x = (int)move_x_public;
-	pos_y = (int)move_y_public;
-}
-void Unit::ai_boss(void)
-{
-	to_x = rand() % PLAY_COLS;
-	to_y = rand() % PLAY_LINES + 1;
-
-	to_x_power = (to_x - pos_x) * move_speed / 50;
-	to_y_power = (to_y - pos_y) * move_speed / 50;
-}
-void Unit::ai(void)
-{
-	to_x = rand() % PLAY_COLS;
-	to_y = rand() % PLAY_LINES + 1;
-
-	to_x_power = (to_x - pos_x) * move_speed / 20;
-	to_y_power = (to_y - pos_y) * move_speed / 20;
-}
-int Unit::attack()
-{
-	return damage;
+	pos = { (LONG)move.x, (LONG)move.y };
 }
 void Unit::be_attacked(int damage_earn)
 {
 	hp -= damage_earn;
-	if (hp <= 0)
+	if (hp <= 0){
+		Print::get().inColor(pos.x, pos.y, 12);
+		Print::get().inColor(pos.x + 2, pos.y, DEF_COLOR);
+		Print::get().inText(pos.x, pos.y, "@@");
 		is_dead = true;
+
+		player.at(0).max_hp += 2;
+		player.at(0).max_mp += 1;
+	}
 }
-int Unit::hit(void)
+int Unit::attack()
 {
-	if (pos_x > x_left - 1 && pos_x < x_right + 1 &&
-		pos_y > y_up - 2 && pos_y < y_down + 2) return 1;
+	if (player.at(0).pos.x == pos.x && player.at(0).pos.y == pos.y){
+		player.at(0).delay ++;
+		Print::get().printBottom();
+		return damage;
+	}
 	else return 0;
-}
-void Unit::release(void)
-{
-	is_dead = false;
-}
-void Unit::show_pos()
-{
-	if (is_dead) return;
-	Print::get().inText(pos_x, pos_y, shape);
-}
-
-
-void Hero::hp_status()
-{
-	static int max_hp = hp;
-	double now_hp = (hp / max_hp) * 100;
-
-	//Print::get().inText()
-}
-
-
-
-void Hero::move_input(int input_key)
-{
-	switch (input_key)
-	{
-	case UP_KEY:
-		to_y_power -= move_speed / 2;
-		break;
-	case DOWN_KEY:
-		to_y_power += move_speed / 2;
-		break;
-	case LEFT_KEY:
-		to_x_power -= move_speed;
-		break;
-	case RIGHT_KEY:
-		to_x_power += move_speed;
-		break;
-	}
-}
-void Hero::skill_z(void)
-{
-	if (!skill_z_on) return;
-
-	x_left = pos_x - 4;
-	x_right = pos_x + 4;
-	y_up = pos_y - 2;
-	y_down = pos_y + 2;
-
-	gotoxy(x_left, y_up + 1); setcolor(12);
-	printf("▨▨▨▨▨"); setcolor(15);
-	gotoxy(x_left, pos_y); setcolor(12);
-	printf("▨▨▨▨▨"); setcolor(15);
-	gotoxy(x_left, y_down - 1); setcolor(12);
-	printf("▨▨▨▨▨"); setcolor(15);
-
-	Sleep(10);
-
-	gotoxy(x_left - 1, y_up); setcolor(12);
-	printf("  ▒▒▒▒  "); setcolor(15);
-	gotoxy(x_left - 1, pos_y); setcolor(12);
-	printf("▒▒※※▒▒"); setcolor(15);
-	gotoxy(x_left - 1, y_down); setcolor(12);
-	printf("  ▒▒▒▒  "); setcolor(15);
-
-	for (unsigned int i = 0; i < mob.size(); i++)
-	{
-		if (mob.at(i).hit()){
-			mob.at(i).be_attacked(50);
-		}
-	}
-	Sleep(10);
-
-	skill_z_on = 0;
-}
-void Hero::skill_on(int skill)
-{
-	switch (skill)
-	{
-	case 'z':
-		skill_z_on = 1;
-		break;
-	}
 }

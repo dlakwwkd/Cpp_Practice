@@ -6,30 +6,35 @@
 std::string mainMenuList[]
 =
 {
-	"[ 싱글 플레이 ]",
-	"[ 멀티 플레이 ]",
-	" [ 게임 설정 ] ",
-	" [ 게임 종료 ] "
+	"[  싱글 플레이  ]",
+	"[  멀티 플레이  ]",
+	"[   게임 설정   ]",
+	"[   게임 종료   ]"
 };
 std::string modeMenuList[]
 =
 {
-	"[ 디펜스 모드 ]",
-	" [ 대전 모드 ] ",
-	" [ 이전 화면 ] ",
+	"[  초급 난이도  ]",
+	"[  중급 난이도  ]",
+	"[   이전 화면   ]",
 };
 std::string heroList[]
 =
 {
 	"[ 빛나는 잉여군 ]",
-	"  [ 이전 화면 ]  ",
+	"[   이전 화면   ]",
 };
-
+std::string gameOverList[]
+=
+{
+	"[   이어 하기   ]",
+	"[   처음 으로   ]",
+};
 
 int mainMenuNum = _countof(mainMenuList);
 int modeMenuNum = _countof(modeMenuList);
 int heroListNum = _countof(heroList);
-
+int gameOverListNum = _countof(gameOverList);
 
 void mainMenuPrint(int menu)
 {
@@ -38,8 +43,7 @@ void mainMenuPrint(int menu)
 	{
 		if (menu == i + 1)
 		{
-			Print::get().inColor(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, 10);
-			Print::get().inColor(CONSOLE_COLS / 5 * 2 + mainMenuList[i].length(), CONSOLE_LINES / 5 * 2 + i, 15);
+			Print::get().inText(CONSOLE_COLS / 5 * 2 - 3, CONSOLE_LINES / 5 * 2 + i, "☞");
 		}
 		Print::get().inText(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, mainMenuList[i]);
 	}
@@ -53,8 +57,7 @@ void modeMenuPrint(int menu)
 	{
 		if (menu == i + 1)
 		{
-			Print::get().inColor(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, 10);
-			Print::get().inColor(CONSOLE_COLS / 5 * 2 + modeMenuList[i].length(), CONSOLE_LINES / 5 * 2 + i, 15);
+			Print::get().inText(CONSOLE_COLS / 5 * 2 - 3, CONSOLE_LINES / 5 * 2 + i, "☞");
 		}
 		Print::get().inText(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, modeMenuList[i]);
 	}
@@ -68,23 +71,28 @@ void heroListPrint(int menu)
 	{
 		if (menu == i + 1)
 		{
-			Print::get().inColor(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, 10);
-			Print::get().inColor(CONSOLE_COLS / 5 * 2 + heroList[i].length(), CONSOLE_LINES / 5 * 2 + i, 15);
+			Print::get().inText(CONSOLE_COLS / 5 * 2 - 3, CONSOLE_LINES / 5 * 2 + i, "☞");
 		}
 		Print::get().inText(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, heroList[i]);
 	}
 	Print::get().printText();
 }
 
-void status(void)
+void gameOverListPrint(int menu)
 {
-	Print::get().inColor(3, PLAY_LINES + 1, 60);
-	Print::get().inColor(60, PLAY_LINES + 1, 63);
-
-	//player.at(0).
-
+	Print::get().init();
+	Print::get().inColor(CONSOLE_COLS / 5 * 2 - 1, CONSOLE_LINES / 3 - 1, 11);
+	Print::get().inText(CONSOLE_COLS / 5 * 2 - 1, CONSOLE_LINES / 3 - 1, "== [ Game Over ] ==");
+	for (int i = 0; i < gameOverListNum; i++)
+	{
+		if (menu == i + 1)
+		{
+			Print::get().inText(CONSOLE_COLS / 5 * 2 - 3, CONSOLE_LINES / 5 * 2 + i, "☞");
+		}
+		Print::get().inText(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, gameOverList[i]);
+	}
+	Print::get().printText();
 }
-
 
 
 
