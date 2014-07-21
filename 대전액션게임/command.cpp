@@ -9,13 +9,13 @@ void inputKey(int input)
 	Print::get().printBottom();
 	switch (input)
 	{
-	case ESC_KEY:
+	case INPUT_KEY(ESC):
 		player.clear();
 		mob.clear();
 		system("cls");
 		gamePlay = OFF;
 		break;
-	case ENTER_KEY:
+	case INPUT_KEY(ENTER):
 		if (!mob.size())
 		{
 			gameStage++;
@@ -23,7 +23,7 @@ void inputKey(int input)
 			respawne();
 		}
 		break;
-	case SCAN_CODE:
+	case INPUT_KEY(SCAN_CODE):
 		input = _getch();
 		player.at(0).move_input(input);
 		break;
@@ -44,11 +44,11 @@ void inputKey2(int input)
 	switch (input)
 	{
 	case 'x':
-	case ESC_KEY:
+	case INPUT_KEY(ESC):
 		dummy.pop();
 		designateMode = OFF;
 		break;
-	case SCAN_CODE:
+	case INPUT_KEY(SCAN_CODE):
 		input = _getch();
 		dummy.front().move_input(input);
 		break;

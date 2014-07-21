@@ -14,7 +14,6 @@ public:
 		static Print instance;
 		return instance;
 	}
-
 	int colorBuffer[CONSOLE_LINES + 1][CONSOLE_COLS + 1];
 	char screenBuffer[CONSOLE_LINES + 1][CONSOLE_COLS + 1];
 
@@ -26,11 +25,8 @@ public:
 	void printBottom(void);
 
 	void frameCheck(void);
-
 private:
 	Print();
 };
-
-
 
 #endif

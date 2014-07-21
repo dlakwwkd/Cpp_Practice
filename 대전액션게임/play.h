@@ -9,5 +9,4 @@
 void gameRunLoop(void);
 void gamePlayLoop(void);
 
-
 #endif

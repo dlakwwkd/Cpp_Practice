@@ -3,15 +3,17 @@
 
 #include "stdafx.h"
 
+int gameSpeed;
 int gameStage;
 int gameLevel;
 int gameFrame;
-int gameRun;
-int gamePlay;
 int gameMode;
 int heroType;
 int mobNumber;
-int designateMode;
+bool gameRun;
+bool gamePlay;
+bool lowSpecMode;
+bool designateMode;
 unsigned int gameTime;
 
 std::vector<Hero> player;
@@ -23,17 +25,22 @@ void initPlay(void)
 {
 	srand((unsigned int)time(NULL));
 	gameTime = (unsigned int)time(NULL);
+	gameSpeed = GAME_SPEED(MODERATE);
 	gameStage = 1;
 	gameFrame = 0;
+	lowSpecMode = OFF;
 	designateMode = OFF;
 
 	switch (gameLevel)
 	{
-	case LEVEL1:
+	case GAME_LEVEL(EASY):
 		mobNumber = 10;
 		break;
-	case LEVEL2:
+	case GAME_LEVEL(NOMAL):
 		mobNumber = 30;
+		break;
+	case GAME_LEVEL(HARD):
+		mobNumber = 10;
 		break;
 	}
 	respawne();
@@ -45,7 +52,7 @@ void heroCreate(void)
 {
 	switch (heroType)
 	{
-	case TYPE1:
+	case HERO_TYPE(INYO):
 		Inyo inyo;
 		player.push_back(inyo);
 		break;
@@ -54,15 +61,15 @@ void heroCreate(void)
 
 void respawne(void)
 {
-	if (gameStage % 6 == 0) gameMode = MODE2;
-	else gameMode = MODE1;
+	if (gameStage % 6 == 0) gameMode = MOB_MOVE_FORM(MASS);
+	else gameMode = MOB_MOVE_FORM(SCATTER);
 
 	if (gameStage % 3 != 0)
 	{
 		for (int i = 0; i < mobNumber; i++)
 		{
 			Unit m("mob", "()", 3 * gameLevel + (double)gameStage / 3 * gameLevel,
-				10 + gameStage * 2, 5 + gameStage, 3 + gameStage/2);
+				10 + gameStage * (2 + gameLevel), 5 + gameStage * (gameLevel), 3 + gameStage * (1 + gameLevel));
 			mob.push_back(m);
 		}
 	}
@@ -71,7 +78,7 @@ void respawne(void)
 		for (int i = 0; i < mobNumber; i++)
 		{
 			Unit m("mob", "><", 6 * gameLevel + (double)gameStage / 2 * gameLevel,
-				10 + gameStage, 5 + gameStage, 3 + gameStage);
+				10 + gameStage * gameLevel, 5 + gameStage * (gameLevel), 3 + gameStage * (2 + gameLevel));
 			mob.push_back(m);
 		}
 	}
@@ -88,16 +95,16 @@ void mainMenu(void)
 		mainMenuPrint(menu);
 		input = _getch();
 
-		if (input == SCAN_CODE)
+		if (input == INPUT_KEY(SCAN_CODE))
 		{
 			input = _getch();
 			switch (input)
 			{
-			case UP_KEY:
+			case INPUT_KEY(UP):
 				if (menu > 1) menu--;
 				else menu = mainMenuNum;
 				break;
-			case DOWN_KEY:
+			case INPUT_KEY(DOWN):
 				if (menu < mainMenuNum) menu++;
 				else menu = 1;
 				break;
@@ -107,7 +114,7 @@ void mainMenu(void)
 		{
 			switch (input)
 			{
-			case ENTER_KEY:
+			case INPUT_KEY(ENTER):
 				if (menu == mainMenuNum){
 					gameRun = OFF;
 					gamePlay = OFF;
@@ -117,11 +124,11 @@ void mainMenu(void)
 				else{
 					gotoxy(0, PLAY_LINES);
 					printf("아직 준비되지 않은 메뉴입니다.");
-					Sleep(50);
+					Sleep(500);
 				}
 				if (gamePlay) return;
 				break;
-			case ESC_KEY:
+			case INPUT_KEY(ESC):
 				gameRun = OFF;
 				gamePlay = OFF;
 				return;
@@ -138,16 +145,16 @@ void selectMode(int input)
 		modeMenuPrint(menu);
 		input = _getch();
 
-		if (input == SCAN_CODE)
+		if (input == INPUT_KEY(SCAN_CODE))
 		{
 			input = _getch();
 			switch (input)
 			{
-			case UP_KEY:
+			case INPUT_KEY(UP):
 				if (menu > 1) menu--;
 				else menu = modeMenuNum;
 				break;
-			case DOWN_KEY:
+			case INPUT_KEY(DOWN):
 				if (menu < modeMenuNum) menu++;
 				else menu = 1;
 				break;
@@ -157,7 +164,7 @@ void selectMode(int input)
 		{
 			switch (input)
 			{
-			case ENTER_KEY:
+			case INPUT_KEY(ENTER):
 				if (menu == modeMenuNum){
 					gamePlay = OFF;
 					return;
@@ -166,7 +173,7 @@ void selectMode(int input)
 				selectHero();
 				if (gamePlay) return;
 				break;
-			case ESC_KEY:
+			case INPUT_KEY(ESC):
 				gamePlay = OFF;
 				return;
 			}
@@ -183,16 +190,16 @@ void selectHero(void)
 		heroListPrint(menu);
 		input = _getch();
 
-		if (input == SCAN_CODE)
+		if (input == INPUT_KEY(SCAN_CODE))
 		{
 			input = _getch();
 			switch (input)
 			{
-			case UP_KEY:
+			case INPUT_KEY(UP):
 				if (menu > 1) menu--;
 				else menu = heroListNum;
 				break;
-			case DOWN_KEY:
+			case INPUT_KEY(DOWN):
 				if (menu < heroListNum) menu++;
 				else menu = 1;
 				break;
@@ -202,7 +209,7 @@ void selectHero(void)
 		{
 			switch (input)
 			{
-			case ENTER_KEY:
+			case INPUT_KEY(ENTER):
 				if (menu == heroListNum){
 					gamePlay = OFF;
 					return;
@@ -211,7 +218,7 @@ void selectHero(void)
 				heroCreate();
 				gamePlay = ON;
 				return;
-			case ESC_KEY:
+			case INPUT_KEY(ESC):
 				gamePlay = OFF;
 				return;
 			}
@@ -228,16 +235,16 @@ void gameOver(void)
 		gameOverListPrint(menu);
 		input = _getch();
 
-		if (input == SCAN_CODE)
+		if (input == INPUT_KEY(SCAN_CODE))
 		{
 			input = _getch();
 			switch (input)
 			{
-			case UP_KEY:
+			case INPUT_KEY(UP):
 				if (menu > 1) menu--;
 				else menu = gameOverListNum;
 				break;
-			case DOWN_KEY:
+			case INPUT_KEY(DOWN):
 				if (menu < gameOverListNum) menu++;
 				else menu = 1;
 				break;
@@ -247,7 +254,7 @@ void gameOver(void)
 		{
 			switch (input)
 			{
-			case ENTER_KEY:
+			case INPUT_KEY(ENTER):
 				if (menu == gameOverListNum)
 				{
 					player.clear();
@@ -256,7 +263,7 @@ void gameOver(void)
 					gamePlay = OFF;
 					return;
 				}
-				if (player.at(0).heart > 0)
+				if (player.at(0).having_heart() > 0)
 				{
 					player.at(0).revive();
 				}

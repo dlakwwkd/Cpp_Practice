@@ -8,15 +8,13 @@
 
 class Dummy : public Hero
 {
-protected:
-
 public:
 	Dummy();
 	Dummy(POINT pc);
 	~Dummy();
 
+	void show_pos(void);
 	void ai(int reduce);
-
 };
 
 #endif

@@ -65,7 +65,7 @@ void Print::printText()
 					setcolor(colorBuffer[y][x]);
 				_putch(screenBuffer[y][x]);
 			}
-			setcolor(DEF_COLOR);
+			setcolor(DEF_COLOR(SCREEN));
 		}
 		else printf("%s", screenBuffer[y]);
 	}
@@ -74,22 +74,22 @@ void Print::printText()
 void Print::printTop()
 {
 	gotoxy(0, 0);
-	setcolor(TOP_COLOR);
+	setcolor(DEF_COLOR(TOP_BAR));
 	if (player.empty())
 		printf("\t\t\t\t\t\t\t\t\t\t\t\t\t");
 	else
 	{
 		printf("   Stage%4d   \t\t    ENTER: 다음 라운드         ESC: 처음으로   \t\t     남은 생명: %d   ",
-			gameStage, player.at(0).heart);
+			gameStage, player.at(0).having_heart());
 	}
-	setcolor(DEF_COLOR);
+	setcolor(DEF_COLOR(SCREEN));
 	
 }
 
 void Print::printBottom()
 {
 	gotoxy(0, PLAY_LINES + 2);
-	setcolor(BAR_COLOR);
+	setcolor(DEF_COLOR(BOTTOM));
 	printf("\t\t\t\t\t\t\t\t\t\t\t\t\t");
 	setcolor(249);
 	if (player.empty())
@@ -102,9 +102,9 @@ void Print::printBottom()
 		player.at(0).hp_status();
 		player.at(0).mp_status();
 	}
-	setcolor(BAR_COLOR);
+	setcolor(DEF_COLOR(BOTTOM));
 	printf("\t\t\t\t\t\t\t\t\t\t\t\t\t");
-	setcolor(DEF_COLOR);
+	setcolor(DEF_COLOR(SCREEN));
 }
 
 void Print::frameCheck()
@@ -116,14 +116,8 @@ void Print::frameCheck()
 		gotoxy(0, CONSOLE_LINES);
 		setcolor(15);
 		printf("Frame: %d   mob:%5d\t\t\t\t\t\t\t\t\t\t   ", gameFrame, mob.size());
-		setcolor(DEF_COLOR);
+		setcolor(DEF_COLOR(SCREEN));
 		gameTime = (unsigned int)time(NULL);
 		gameFrame = 0;
-	}
-	if (gameFrame > 60){
-		printTop();
-		printBottom();
-		Sleep(5);
-		gameFrame -= 5;
 	}
 }

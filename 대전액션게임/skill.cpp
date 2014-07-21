@@ -3,70 +3,97 @@
 
 #include "stdafx.h"
 
-Skill::Skill() : name("skill"), rect({ 0, 0, 0, 0 }), damage(0), use_mana(0), cooldown(1){}
+Skill::Skill() : name("skill"), rect({ 0, 0, 0, 0 }), damage(0), need_mana(0), cooldown(1){}
 
 Skill::Skill(std::string nm, RECT rt, int dm, int mana, int cool) :
-name(nm), rect(rt), damage(dm), use_mana(mana), cooldown(cool){}
+name(nm), rect(rt), damage(dm), need_mana(mana), cooldown(cool){}
 
 Skill::Skill(const Skill &pc) :
-name(pc.name), rect(pc.rect), damage(pc.damage), use_mana(pc.use_mana), cooldown(pc.cooldown){}
+name(pc.name), rect(pc.rect), damage(pc.damage), need_mana(pc.need_mana), cooldown(pc.cooldown){}
 
-void Skill::skill_z(void)
+void Skill::skill_effect(int effect_color)
 {
 	cooldown--;
 
-	if (player.at(0).mp > use_mana)
+	if (player.at(0).use_mp(need_mana))
 	{
-		setcolor(191);
-		for (int j = rect.top; j <= rect.bottom; j++)
+		int i, j;
+		for (j = rect.top; j <= rect.bottom; j++)
 		{
-			gotoxy(rect.left, j);
-			for (int i = rect.left; i <= rect.right; i++)
-				printf("#");
+			if (j == rect.top || j == rect.bottom)
+			{
+				gotoxy(rect.left + 3, j);
+				setcolor(effect_color);
+				for (i = rect.left + 3; i <= rect.right - 3; i++)
+				{
+					_putch('#');
+				}
+				setcolor(DEF_COLOR(SCREEN));
+			}
+			else if (j == rect.top + 1 || j == rect.bottom - 1)
+			{
+				gotoxy(rect.left + 1, j);
+				setcolor(effect_color);
+				for (i = rect.left + 1; i <= rect.right - 1; i++)
+				{
+					_putch('#');
+				}
+				setcolor(DEF_COLOR(SCREEN));
+			}
+			else
+			{
+				gotoxy(rect.left, j);
+				setcolor(effect_color);
+				for (i = rect.left; i <= rect.right; i++)
+				{
+					_putch('#');
+				}
+				setcolor(DEF_COLOR(SCREEN));
+			}
 		}
-		setcolor(DEF_COLOR);
-		Sleep(10);
+		Sleep(gameSpeed*10/(1+lowSpecMode));
 
-		if (mob.empty()) return;
-		for (unsigned int i = 0; i < mob.size(); i++)
+		if (!mob.empty())
 		{
-			if (PtInRect(&rect, mob.at(i).pos))
-				mob.at(i).be_attacked(damage);
+			for (unsigned int i = 0; i < mob.size(); i++)
+			{
+				if (PtInRect(&rect, mob.at(i).now_pos()))
+					mob.at(i).be_attacked(damage);
+			}
 		}
+		
 		rect.top -= cooldown;
 		rect.bottom += cooldown;
 		rect.left -= 2 * cooldown;
 		rect.right += 2 * cooldown;
-	
-		player.at(0).mp -= use_mana;
 	}
 }
-void Skill::skill_c(void)
+void Skill::skill_use(void)
 {
-	cooldown--;
-
-	if (player.at(0).mp > use_mana)
+	if (name == "Z")
+		skill_effect(SKILL_EFFECT(SKY_BLUE));
+	else if (name == "C")
 	{
-		setcolor(206);
-		for (int j = rect.top; j <= rect.bottom; j++)
-		{
-			gotoxy(rect.left, j);
-			for (int i = rect.left; i <= rect.right - 7; i++)
-				printf("¢Æ");
-		}
-		setcolor(DEF_COLOR);
-		Sleep(10);
+		cooldown--;
 
-		if (mob.empty()) return;
-		for (unsigned int i = 0; i < mob.size(); i++)
-		{
-			if (PtInRect(&rect, mob.at(i).pos))
-				mob.at(i).be_attacked(damage);
-		}
-		rect.top -= cooldown;
-		rect.bottom += cooldown;
-		rect.left -= 2 * cooldown;
+		Skill c_dummy("C_dummy",
+		{ dummy.back().now_pos().x - 4, dummy.back().now_pos().y - 1,
+		dummy.back().now_pos().x + 5, dummy.back().now_pos().y + 3 },
+		12, 6, 2);
+		skill.push(c_dummy);
 
-		player.at(0).mp -= use_mana;
+		if (cooldown < 1){
+			while (!dummy.empty())
+			{
+				dummy.pop();
+			}
+		}
 	}
+	else if (name == "C_dummy")
+	{
+		skill_effect(SKILL_EFFECT(RED_YELLO));
+	}
+
+	if (cooldown < 1)
+		skill.pop();
 }

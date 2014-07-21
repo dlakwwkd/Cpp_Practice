@@ -6,43 +6,44 @@
 
 #include "stdafx.h"
 
-typedef struct POINT_D
+struct POINT_D
 {
 	DOUBLE  x;
 	DOUBLE  y;
-} POINT_D;
-
+};
 
 class Unit
 {
 protected:
+	POINT pos;
 	POINT to_pos;
+	POINT_D move;
 	POINT_D move_power;
+	static POINT_D public_move;
 
 	std::string name;
 	std::string shape;
 
 	double speed;
 	int hp;
+	int mp;
 	int damage;
+	bool is_dead;
 public:
 	Unit();
 	Unit(std::string name, std::string shape, double speed, int hp, int mp, int damage);
 	Unit(const Unit &pc);
 	~Unit();
 
-	static POINT_D public_move;
-	POINT_D move;
-	POINT pos;
-	bool is_dead;
-	int mp;
-
-	void show_pos();
+	POINT now_pos(void);
+	void show_pos(void);
 	void ai(int reduce);
+	void move_type(void);
 	void move_action(POINT_D &move);
 	void be_attacked(int damage_earn);
-	int attack();
+	bool use_mp(int need_mp);
+	bool dead_check(void);
+	int attack(void);
 };
 
 #endif
-

@@ -16,6 +16,7 @@ std::string modeMenuList[]
 {
 	"[  초급 난이도  ]",
 	"[  중급 난이도  ]",
+	"[  상급 난이도  ]",
 	"[   이전 화면   ]",
 };
 std::string heroList[]

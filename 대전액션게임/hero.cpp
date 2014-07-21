@@ -5,15 +5,14 @@
 
 Hero::Hero() : Unit()
 {
-	pos.y = 10;
-	move.y = 10;
+	pos = { 20 ,20 };
+	move = { 20, 20 };
 
 	delay = 0;
 	heart = 3;
 	max_hp = hp;
 	max_mp = mp;
 }
-
 Hero::Hero(POINT pc) : Unit()
 {
 	pos = pc;
@@ -25,11 +24,7 @@ Hero::Hero(POINT pc) : Unit()
 	max_hp = hp;
 	max_mp = mp;
 }
-
-Hero::~Hero()
-{
-}
-
+Hero::~Hero(){}
 
 Inyo::Inyo() : Hero()
 {
@@ -42,7 +37,6 @@ Inyo::Inyo() : Hero()
 	max_hp = hp;
 	max_mp = mp;
 }
-
 Inyo::Inyo(POINT pc) : Hero()
 {
 	pos = pc;
@@ -57,23 +51,42 @@ Inyo::Inyo(POINT pc) : Hero()
 	max_hp = hp;
 	max_mp = mp;
 }
+Inyo::~Inyo(){}
 
-Inyo::~Inyo()
+void Hero::show_pos(void)
 {
+	if (is_dead) return;
+	Print::get().inColor(pos.x, pos.y, 14);
+	Print::get().inColor(pos.x + 2, pos.y, DEF_COLOR(SCREEN));
+	Print::get().inText(pos.x, pos.y, shape);
 }
-
+void Hero::hit_check(int mob_num)
+{
+	if (delay == 0 &&
+		pos.x > mob.at(mob_num).now_pos().x -2 &&
+		pos.x < mob.at(mob_num).now_pos().x + 2 &&
+		pos.y == mob.at(mob_num).now_pos().y)
+	{
+		be_attacked(mob.at(mob_num).attack());
+	}
+}
 void Hero::dead_check(void)
 {
 	if (is_dead) gameOver();
 }
 void Hero::revive(void)
 {
-	hp = 100;
+	hp = max_hp;
 	Print::get().printBottom();
 	is_dead = false;
 	heart--;
 }
-void Hero::hp_status()
+void Hero::level_up(void)
+{
+	max_hp += 1;
+	max_mp += 1;
+}
+void Hero::hp_status(void)
 {
 	double now_hp = (double)hp * 50 / max_hp;
 
@@ -88,9 +101,9 @@ void Hero::hp_status()
 	printf("  공격 : Z key    조준 : X key    ");
 
 	if (player.at(0).hp < max_hp)
-		player.at(0).hp += 1;
+		player.at(0).hp += 1 + max_hp / 300;
 }
-void Hero::mp_status()
+void Hero::mp_status(void)
 {
 	double now_mp = (double)mp * 50 / max_mp;
 
@@ -104,31 +117,63 @@ void Hero::mp_status()
 	printf("  스킬1: X -> Z   스킬2: X -> C   ");
 
 	if (player.at(0).mp < max_mp)
-		player.at(0).mp += 2;
+		player.at(0).mp += 2 + max_mp / 300;
 }
-void Hero::init_delay()
+void Hero::init_delay(void)
 {
 	if (delay > 0)
 		delay--;
 	else delay = 0;
 }
+void Hero::add_delay(void)
+{
+	delay += 2;
+}
 void Hero::move_input(int input_key)
 {
 	switch (input_key)
 	{
-	case UP_KEY:
+	case INPUT_KEY(UP):
 		move_power.y -= speed / 2;
 		break;
-	case DOWN_KEY:
+	case INPUT_KEY(DOWN):
 		move_power.y += speed / 2;
 		break;
-	case LEFT_KEY:
+	case INPUT_KEY(LEFT):
 		move_power.x -= speed;
 		break;
-	case RIGHT_KEY:
+	case INPUT_KEY(RIGHT):
 		move_power.x += speed;
 		break;
 	}
+}
+void Hero::move_action(void)
+{
+	if (move_power.x > 1 || move_power.x < -1) move_power.x -= move_power.x / 16;
+	else move_power.x = 0;
+
+	if (move_power.y > 1 || move_power.y < -1) move_power.y -= move_power.y / 16;
+	else move_power.y = 0;
+
+	if (move_power.x)
+	{
+		move.x += move_power.x / 8;
+
+		if (move.x < 0)
+			move.x = 0;
+		else if (move.x > PLAY_COLS)
+			move.x = PLAY_COLS;
+	}
+	if (move_power.y)
+	{
+		move.y += move_power.y / 8;
+
+		if (move.y < 0)
+			move.y = 0;
+		else if (move.y > PLAY_LINES)
+			move.y = PLAY_LINES;
+	}
+	pos = { (LONG)move.x, (LONG)move.y };
 }
 void Hero::skill_on(int skill_type)
 {
@@ -137,9 +182,9 @@ void Hero::skill_on(int skill_type)
 		if (skill_type == 'z')
 		{
 			Skill z("Z",
-			{ dummy.front().pos.x - 2, dummy.front().pos.y,
-			dummy.front().pos.x + 3, dummy.front().pos.y + 2 },
-			15, 10, 3);
+			{ dummy.front().pos.x - 4, dummy.front().pos.y - 1,
+			dummy.front().pos.x + 5, dummy.front().pos.y + 3 },
+			15, 5, 3);
 			skill.push(z);
 			dummy.pop();
 			designateMode = OFF;
@@ -161,7 +206,7 @@ void Hero::skill_on(int skill_type)
 			Skill z("Z",
 			{ player.at(0).pos.x - 2, player.at(0).pos.y,
 			player.at(0).pos.x + 3, player.at(0).pos.y + 2 },
-			20, 5, 2);
+			10, 2, 3);
 			skill.push(z);
 		}
 		else if (skill_type == 'x')
@@ -172,41 +217,19 @@ void Hero::skill_on(int skill_type)
 		}
 		else if (skill_type == 'v')
 		{
-			for (int i = 0; i < mob.size(); i++)
+			for (unsigned int i = 0; i < mob.size(); i++)
 			{
 				mob.at(i).be_attacked(100);
 			}
 		}
 	}
 }
-void Hero::skill_use(void)
+void Hero::skill_check(void)
 {
 	if (skill.empty()) return;
-
-	if (skill.front().name == "Z")
-		skill.front().skill_z();
-	else if (skill.front().name == "C")
-	{
-		skill.front().cooldown--;
-
-		Skill c_dummy("C_dummy",
-		{ dummy.back().pos.x - 6, dummy.back().pos.y - 2,
-		dummy.back().pos.x + 7, dummy.back().pos.y + 4 },
-		12, 6, 2);
-		skill.push(c_dummy);
-
-		if (skill.front().cooldown < 1){
-			while (!dummy.empty())
-			{
-				dummy.pop();
-			}
-		}
-	}
-	else if (skill.front().name == "C_dummy")
-	{
-		skill.front().skill_c();
-	}
-
-	if (skill.front().cooldown < 1)
-		skill.pop();
+	else skill.front().skill_use();
+}
+int Hero::having_heart(void)
+{
+	return heart;
 }

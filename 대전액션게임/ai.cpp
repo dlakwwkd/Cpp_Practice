@@ -10,9 +10,9 @@ void moveAi(void)
 	
 	switch (gameMode)
 	{
-	case MODE1:
+	case MOB_MOVE_FORM(SCATTER):
 		break;
-	case MODE2:
+	case MOB_MOVE_FORM(MASS):
 		i = rand() % mob.size();
 		mob.at(i).ai(50);
 		break;
@@ -22,21 +22,20 @@ void moveAi(void)
 	{
 		switch (gameMode)
 		{
-		case MODE1:
-			if (rand() % 20 == 0)
+		case MOB_MOVE_FORM(SCATTER):
+			if (rand() % 30/gameLevel == 0)
 				mob.at(i).ai(20);
-			mob.at(i).move_action(mob.at(i).move);
+			mob.at(i).move_type();
 			break;
-		case MODE2:
-			if (rand() % (mob.size() / 10 + 1) == 0)
-				mob.at(i).move_action(mob.at(i).public_move);
+		case MOB_MOVE_FORM(MASS):
+			if (rand() % (mob.size() / 10 / gameLevel + 1) == 0)
+				mob.at(i).move_type();
 			break;
 		}
-
 		mob.at(i).show_pos();
 
-		if (player.at(0).delay == 0)
-			player.at(0).be_attacked(mob.at(i).attack());
-		if (mob.at(i).is_dead) mob.erase(mob.begin() + i);
+		player.at(0).hit_check(i);
+
+		if (mob.at(i).dead_check()) mob.erase(mob.begin() + i);
 	}
 }

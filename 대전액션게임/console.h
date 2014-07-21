@@ -8,17 +8,17 @@
 
 #define CONSOLE_LINES 42
 #define CONSOLE_COLS 100
-
 #define PLAY_LINES (CONSOLE_LINES-6)
 #define PLAY_COLS (CONSOLE_COLS-2)
 
-#define DEF_COLOR 10
-#define TOP_COLOR 63
-#define BAR_COLOR 63
-
+enum DEF_COLOR
+{
+	TOP_BAR = 63,
+	BOTTOM = 63,
+	SCREEN = 10
+};
 
 void initConsole(void);
-
 void gotoxy(int x, int y);
 void setcolor(int color);
 
