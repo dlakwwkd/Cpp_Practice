@@ -143,18 +143,19 @@ void GameOverPrint(void)
 		Gotoxy(CONSOLE_COLS - i, CONSOLE_LINES / 2 + 5);
 		printf("-");
 		Gotoxy(i, CONSOLE_LINES / 3 - 1);
-		Sleep(5);
+		Sleep(1);
 	}
 
 	Gotoxy(CONSOLE_COLS / 5 * 2 + 2, CONSOLE_LINES / 3 + 3);
 	Setcolor(12);
 	printf("== [ Game Over ] ==");
-	Gotoxy(CONSOLE_COLS / 5 * 2 + 2, CONSOLE_LINES / 3 + 5);
+	Gotoxy(CONSOLE_COLS / 5 * 2 + 3, CONSOLE_LINES / 3 + 5);
 	Setcolor(15);
 	printf("   남은 생명: %d ", player.at(0).havingHeart());
-	Gotoxy(CONSOLE_COLS / 5 * 2 + 2, CONSOLE_LINES / 3 + 7);
+	Gotoxy(CONSOLE_COLS / 5 * 2 + 3, CONSOLE_LINES / 3 + 7);
 	Setcolor(14);
 	printf("Press Enter Key...");
+	Setcolor(0);
 }
 
 void GameOverListPrint(int menu)
@@ -187,9 +188,10 @@ void suspensionOptionPrint(void)
 	Gotoxy(CONSOLE_COLS / 5 * 2 + 2, CONSOLE_LINES / 3 + 4);
 	Setcolor(15);
 	printf("== [ 일시 정지 ] ==");
-	Gotoxy(CONSOLE_COLS / 5 * 2 + 2, CONSOLE_LINES / 3 + 6);
+	Gotoxy(CONSOLE_COLS / 5 * 2 + 3, CONSOLE_LINES / 3 + 6);
 	Setcolor(14);
 	printf("Press Enter Key...");
+	Setcolor(0);
 }
 
 void suspensionOptionListPrint(int menu)

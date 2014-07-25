@@ -100,7 +100,7 @@ void Print::printTop()
 		printf("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
 	else
 	{
-		printf(" \t  Stage%4d   \t\t\t    ENTER: 다음 라운드         ESC: 처음으로   \t\t\t\t     남은 생명: %d  \t ",
+		printf(" \t  Stage%4d   \t\t\t    ENTER: 다음 라운드         ESC: 처음으로   \t\t\t\t     남은 생명: %d  \t      ",
 			gameStage, player.at(0).havingHeart());
 	}
 }

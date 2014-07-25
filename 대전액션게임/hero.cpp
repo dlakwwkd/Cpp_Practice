@@ -77,6 +77,7 @@ void Hero::deadCheck(void)
 void Hero::revive(void)
 {
 	hp = max_hp;
+	mp = max_mp;
 	Print::get().printBottom();
 	is_dead = false;
 	heart--;
@@ -101,7 +102,8 @@ void Hero::hpStatus(void)
 	printf(" \t\t 공격 : Z key    조준 : X key   \t\t\t");
 
 	if (player.at(0).hp < max_hp)
-		player.at(0).hp += 2 + max_hp / 300;
+		player.at(0).hp += 2 + max_hp / 200;
+	else player.at(0).hp = max_hp;
 }
 void Hero::mpStatus(void)
 {
@@ -117,7 +119,8 @@ void Hero::mpStatus(void)
 	printf(" \t\t 스킬1: X -> Z   스킬2: X -> C  \t\t\t");
 
 	if (player.at(0).mp < max_mp)
-		player.at(0).mp += 3 + max_mp / 200;
+		player.at(0).mp += 10 + max_mp / 200;
+	else player.at(0).mp = max_mp;
 }
 void Hero::initDelay(void)
 {
@@ -190,7 +193,8 @@ void Hero::skillOn(int skill_type)
 			dummy.front().pos.x + 5, dummy.front().pos.y + 3 },
 			15, 5, 3);
 			skill.push(z);
-			dummy.pop();
+			if (!dummy.empty())
+				dummy.pop();
 			designateMode = OFF;
 		}
 		else if (skill_type == 'c')

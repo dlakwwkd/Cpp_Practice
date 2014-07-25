@@ -15,6 +15,27 @@ void Skill::skillEffect(int effect_color)
 {
 	cooldown--;
 
+	if (rect.top < 1)
+	{
+		rect.bottom += 1 - rect.top;
+		rect.top += 1 - rect.top;
+	}
+	if (rect.bottom > PLAY_LINES + 1)
+	{
+		rect.top += (PLAY_LINES + 1) - rect.bottom;
+		rect.bottom += (PLAY_LINES + 1) - rect.bottom;
+	}
+	if (rect.left < 0)
+	{
+		rect.right += 0 - rect.left;
+		rect.left += 0 - rect.left;
+	}
+	if (rect.right > PLAY_COLS + 1)
+	{
+		rect.left += (PLAY_COLS +1 ) - rect.right;
+		rect.right += (PLAY_COLS + 1) - rect.right;
+	}
+
 	if (player.at(0).useMp(need_mana))
 	{
 		int i, j;
@@ -95,5 +116,8 @@ void Skill::skillUse(void)
 	}
 
 	if (cooldown < 1)
-		skill.pop();
+	{
+		if (!skill.empty())
+			skill.pop();
+	}
 }

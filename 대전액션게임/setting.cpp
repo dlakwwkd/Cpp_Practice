@@ -38,13 +38,13 @@ void InitPlay(void)
 		mobNumber = 20;
 		break;
 	case GameLevel(NOMAL):
-		mobNumber = 5;
+		mobNumber = 10;
 		break;
 	case GameLevel(HARD):
-		mobNumber = 20;
+		mobNumber = 30;
 		break;
 	case GameLevel(VERY_HARD):
-		mobNumber = 5;
+		mobNumber = 10;
 		break;
 	case GameLevel(CRAZY):
 		mobNumber = 50;
@@ -75,8 +75,9 @@ void Respawne(void)
 	{
 		for (int i = 0; i < mobNumber * gameMode; i++)
 		{
-			Unit m("mob", "()", 8 + gameLevel*2 + (double)gameStage / 4,
-				10 + gameStage * (2 + gameLevel), 5 + gameStage * gameLevel, 3 + gameStage * (1 + gameLevel));
+			Unit m("mob", "()", 8 + gameLevel*2 + (double)gameStage / 4,		//이속
+				10 + gameStage * (2 + gameLevel), 5 + gameStage * gameLevel,	//체력, 마나
+				3 + gameStage * (1 + gameLevel/2));								//데미지
 			mob.push_back(m);
 		}
 	}
@@ -85,7 +86,8 @@ void Respawne(void)
 		for (int i = 0; i < mobNumber * gameMode; i++)
 		{
 			Unit m("mob", "><", 12 + gameLevel*2 + (double)gameStage / 3,
-				10 + gameStage * (1 + gameLevel), 5 + gameStage * gameLevel, 3 + gameStage * (2 + gameLevel));
+				10 + gameStage * (1 + gameLevel), 5 + gameStage * gameLevel,
+				3 + gameStage * (2 + gameLevel/2));
 			mob.push_back(m);
 		}
 	}
@@ -426,7 +428,7 @@ void GameOver(void)
 					return;
 				}
 				else{
-					Gotoxy(CONSOLE_COLS / 3 + 3, CONSOLE_LINES / 3 + 8);
+					Gotoxy(CONSOLE_COLS / 3 + 8, CONSOLE_LINES / 3 + 8);
 					Setcolor(15);
 					printf(" 더 이상 생명이 없습니다. ");
 					Sleep(500);

@@ -125,7 +125,7 @@ void InputCommand()
 				if (!mob.size())
 				{
 					gameStage++;
-					mobNumber += 5;
+					mobNumber += 4 + gameLevel;
 					Respawne();
 				}
 				inputEnter = 1;

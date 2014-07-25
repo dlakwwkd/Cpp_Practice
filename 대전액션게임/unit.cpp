@@ -30,9 +30,15 @@ void Unit::showPos(void)
 }
 void Unit::ai(int reduce)
 {
-	to_pos.x = rand() % PLAY_COLS;
-	to_pos.y = rand() % PLAY_LINES;
-
+	if (rand() % (7 - gameLevel) == 0)
+	{
+		to_pos = player.at(0).nowPos();
+	}
+	else
+	{
+		to_pos.x = rand() % PLAY_COLS;
+		to_pos.y = rand() % PLAY_LINES;
+	}
 	move_power.x = (to_pos.x - pos.x) * speed / reduce;
 	move_power.y = (to_pos.y - pos.y) * speed / reduce;
 }
@@ -50,15 +56,15 @@ void Unit::moveType(void)
 }
 void Unit::moveAction(POINT_D &move)
 {
-	if (move_power.x > 1 || move_power.x < -1) move_power.x -= move_power.x / 5;
+	if (move_power.x > 1 || move_power.x < -1) move_power.x -= move_power.x / 8;
 	else move_power.x = 0;
 
-	if (move_power.y > 1 || move_power.y < -1) move_power.y -= move_power.y / 5;
+	if (move_power.y > 1 || move_power.y < -1) move_power.y -= move_power.y / 8;
 	else move_power.y = 0;
 
 	if (move_power.x)
 	{
-		move.x += move_power.x / 5;
+		move.x += move_power.x / 6;
 
 		if (move.x < 0)
 			move.x = 0;
@@ -67,7 +73,7 @@ void Unit::moveAction(POINT_D &move)
 	}
 	if (move_power.y)
 	{
-		move.y += move_power.y / 5;
+		move.y += move_power.y / 6;
 
 		if (move.y < 0)
 			move.y = 0;

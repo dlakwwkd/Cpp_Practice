@@ -23,7 +23,7 @@ void MoveAi(void)
 		switch (gameMode)
 		{
 		case MobMoveForm(SCATTER):
-			if (rand() % 30 - gameLevel*2 == 0)
+			if (rand() % 20 - gameLevel*3 == 0)
 				mob.at(i).ai(20);
 			mob.at(i).moveType();
 			break;
