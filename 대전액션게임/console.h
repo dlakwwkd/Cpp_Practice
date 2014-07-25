@@ -6,20 +6,21 @@
 
 #include "stdafx.h"
 
-#define CONSOLE_LINES 42
-#define CONSOLE_COLS 100
+#define CONSOLE_LINES 44
+#define CONSOLE_COLS 135
 #define PLAY_LINES (CONSOLE_LINES-6)
 #define PLAY_COLS (CONSOLE_COLS-2)
 
-enum DEF_COLOR
+enum DefColor
 {
 	TOP_BAR = 63,
 	BOTTOM = 63,
-	SCREEN = 10
+	SCREEN = 10,
+	STATUS_BAR = 249,
 };
 
-void initConsole(void);
-void gotoxy(int x, int y);
-void setcolor(int color);
+void InitConsole(void);
+void Gotoxy(int x, int y);
+void Setcolor(int color);
 
 #endif

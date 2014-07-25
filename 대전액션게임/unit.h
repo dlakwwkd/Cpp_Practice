@@ -14,6 +14,21 @@ struct POINT_D
 
 class Unit
 {
+public:
+	Unit();
+	Unit(std::string name, std::string shape, double speed, int hp, int mp, int damage);
+	Unit(const Unit &pc);
+	~Unit();
+
+	POINT nowPos(void);
+	void showPos(void);
+	void ai(int reduce);
+	void moveType(void);
+	void moveAction(POINT_D &move);
+	void beAttacked(int damage_earn);
+	bool useMp(int need_mp);
+	bool deadCheck(void);
+	int attack(void);
 protected:
 	POINT pos;
 	POINT to_pos;
@@ -29,21 +44,6 @@ protected:
 	int mp;
 	int damage;
 	bool is_dead;
-public:
-	Unit();
-	Unit(std::string name, std::string shape, double speed, int hp, int mp, int damage);
-	Unit(const Unit &pc);
-	~Unit();
-
-	POINT now_pos(void);
-	void show_pos(void);
-	void ai(int reduce);
-	void move_type(void);
-	void move_action(POINT_D &move);
-	void be_attacked(int damage_earn);
-	bool use_mp(int need_mp);
-	bool dead_check(void);
-	int attack(void);
 };
 
 #endif

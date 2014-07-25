@@ -3,58 +3,145 @@
 
 #include "stdafx.h"
 
-void inputKey(int input)
+void InputCommand()
 {
-	Print::get().printTop();
-	Print::get().printBottom();
-	switch (input)
-	{
-	case INPUT_KEY(ESC):
-		player.clear();
-		mob.clear();
-		system("cls");
-		gamePlay = OFF;
-		break;
-	case INPUT_KEY(ENTER):
-		if (!mob.size())
-		{
-			gameStage++;
-			mobNumber += 5;
-			respawne();
-		}
-		break;
-	case INPUT_KEY(SCAN_CODE):
-		input = _getch();
-		player.at(0).move_input(input);
-		break;
-	case 'x':
-	case 'z':
-	case 'c':
-	case 'v':
-		if (dummy.empty())
-			player.at(0).skill_on(input);
-		break;
-	}
-}
+	static int inputX = 0;
+	static int inputZ = 0;
+	static int inputEnter = 0;
+	static int inputEsc = 0;
 
-void inputKey2(int input)
-{
-	Print::get().printTop();
-	Print::get().printBottom();
-	switch (input)
+	if (designateMode)
 	{
-	case 'x':
-	case INPUT_KEY(ESC):
-		dummy.pop();
-		designateMode = OFF;
-		break;
-	case INPUT_KEY(SCAN_CODE):
-		input = _getch();
-		dummy.front().move_input(input);
-		break;
-	case 'z':
-	case 'c':
-		player.at(0).skill_on(input);
-		break;
+		dummy.front().showPos();
+		dummy.front().moveAction();
+
+		if (GetAsyncKeyState(VK_UP) & 0x8000)
+			dummy.front().moveInput(InputKey(UP));
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+			dummy.front().moveInput(InputKey(DOWN));
+		if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+			dummy.front().moveInput(InputKey(LEFT));
+		if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+			dummy.front().moveInput(InputKey(RIGHT));
+
+		if (GetAsyncKeyState(InputKey(Z_KEY)) & 0x8000)
+		{
+			if (inputZ == 0)
+			{
+				player.at(0).skillOn('z');
+				inputZ = 1;
+			}
+		}
+		else inputZ = 0;
+
+		if ((GetAsyncKeyState(InputKey(X_KEY)) & 0x8000))
+		{
+			if (inputX == 0)
+			{
+				dummy.pop();
+				designateMode = OFF;
+				inputX = 1;
+			}
+		}
+		else inputX = 0;
+
+		if (GetAsyncKeyState(InputKey(C_KEY)) & 0x8000)
+			player.at(0).skillOn('c');
+
+		if (GetAsyncKeyState(VK_RETURN) & 0x8000)
+		{
+			if (inputEnter == 0)
+			{
+				while (getchar() != '\n');
+				inputEnter = 1;
+			}
+		}
+		else inputEnter = 0;
+
+		if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
+		{
+			if (inputEnter == 0)
+			{
+				dummy.pop();
+				designateMode = OFF;
+				inputEsc = 1;
+			}
+		}
+		else inputEsc = 0;
+	}
+	else
+	{
+		if (!dummy.empty())
+			dummy.back().moveAction();
+
+		if (GetAsyncKeyState(VK_UP) & 0x8000)
+			player.at(0).moveInput(InputKey(UP));
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+			player.at(0).moveInput(InputKey(DOWN));
+		if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+			player.at(0).moveInput(InputKey(LEFT));
+		if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+			player.at(0).moveInput(InputKey(RIGHT));
+
+		if (GetAsyncKeyState(InputKey(Z_KEY)) & 0x8000)
+		{
+			if (inputZ == 0)
+			{
+				if (dummy.empty())
+					player.at(0).skillOn('z');
+				inputZ = 1;
+			}
+		}
+		else inputZ = 0;
+
+		if ((GetAsyncKeyState(InputKey(X_KEY)) & 0x8000))
+		{
+			if (inputX == 0)
+			{
+				if (dummy.empty())
+					player.at(0).skillOn('x');
+				inputX = 1;
+			}
+		}
+		else inputX = 0;
+
+		if (GetAsyncKeyState(InputKey(C_KEY)) & 0x8000)
+		{
+			if (dummy.empty())
+				player.at(0).skillOn('c');
+		}
+
+		if (GetAsyncKeyState(InputKey(V_KEY)) & 0x8000)
+		{
+			if (dummy.empty())
+				player.at(0).skillOn('v');
+		}
+
+		if (GetAsyncKeyState(VK_RETURN) & 0x8000)
+		{
+			if (inputEnter == 0)
+			{
+				while (getchar() != '\n');
+				if (!mob.size())
+				{
+					gameStage++;
+					mobNumber += 5;
+					Respawne();
+				}
+				inputEnter = 1;
+			}
+		}
+		else inputEnter = 0;
+
+		if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
+		{
+			if (inputEsc == 0)
+			{
+				suspensionOption();
+				inputEsc = 1;
+				inputEnter = 1;
+			}
+		}
+		else inputEsc = 0;
 	}
 }

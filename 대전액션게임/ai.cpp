@@ -3,18 +3,18 @@
 
 #include "stdafx.h"
 
-void moveAi(void)
+void MoveAi(void)
 {
 	if (mob.size() == 0) return;
 	static unsigned int i;
 	
 	switch (gameMode)
 	{
-	case MOB_MOVE_FORM(SCATTER):
+	case MobMoveForm(SCATTER):
 		break;
-	case MOB_MOVE_FORM(MASS):
+	case MobMoveForm(MASS):
 		i = rand() % mob.size();
-		mob.at(i).ai(50);
+		mob.at(i).ai(30);
 		break;
 	}
 
@@ -22,20 +22,20 @@ void moveAi(void)
 	{
 		switch (gameMode)
 		{
-		case MOB_MOVE_FORM(SCATTER):
-			if (rand() % 30/gameLevel == 0)
+		case MobMoveForm(SCATTER):
+			if (rand() % 30 - gameLevel*2 == 0)
 				mob.at(i).ai(20);
-			mob.at(i).move_type();
+			mob.at(i).moveType();
 			break;
-		case MOB_MOVE_FORM(MASS):
-			if (rand() % (mob.size() / 10 / gameLevel + 1) == 0)
-				mob.at(i).move_type();
+		case MobMoveForm(MASS):
+			if (rand() % 10 - gameLevel/2 == 0)
+				mob.at(i).moveType();
 			break;
 		}
-		mob.at(i).show_pos();
+		mob.at(i).showPos();
 
-		player.at(0).hit_check(i);
+		player.at(0).hitCheck(i);
 
-		if (mob.at(i).dead_check()) mob.erase(mob.begin() + i);
+		if (mob.at(i).deadCheck()) mob.erase(mob.begin() + i);
 	}
 }

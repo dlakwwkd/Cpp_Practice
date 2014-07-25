@@ -21,90 +21,96 @@ std::vector<Unit> mob;
 std::queue<Skill> skill;
 std::queue<Dummy> dummy;
 
-void initPlay(void)
+void InitPlay(void)
 {
 	srand((unsigned int)time(NULL));
 	gameTime = (unsigned int)time(NULL);
-	gameSpeed = GAME_SPEED(MODERATE);
 	gameStage = 1;
 	gameFrame = 0;
-	lowSpecMode = OFF;
 	designateMode = OFF;
 
 	switch (gameLevel)
 	{
-	case GAME_LEVEL(EASY):
-		mobNumber = 10;
+	case GameLevel(VERY_EASY):
+		mobNumber = 5;
 		break;
-	case GAME_LEVEL(NOMAL):
-		mobNumber = 30;
+	case GameLevel(EASY):
+		mobNumber = 20;
 		break;
-	case GAME_LEVEL(HARD):
-		mobNumber = 10;
+	case GameLevel(NOMAL):
+		mobNumber = 5;
+		break;
+	case GameLevel(HARD):
+		mobNumber = 20;
+		break;
+	case GameLevel(VERY_HARD):
+		mobNumber = 5;
+		break;
+	case GameLevel(CRAZY):
+		mobNumber = 50;
 		break;
 	}
-	respawne();
+	Respawne();
 	Print::get().printTop();
 	Print::get().printBottom();
 }
 
-void heroCreate(void)
+void HeroCreate(void)
 {
 	switch (heroType)
 	{
-	case HERO_TYPE(INYO):
+	case HeroType(INYO):
 		Inyo inyo;
 		player.push_back(inyo);
 		break;
 	}
 }
 
-void respawne(void)
+void Respawne(void)
 {
-	if (gameStage % 6 == 0) gameMode = MOB_MOVE_FORM(MASS);
-	else gameMode = MOB_MOVE_FORM(SCATTER);
+	if (gameStage % 5 == 0) gameMode = MobMoveForm(MASS);
+	else gameMode = MobMoveForm(SCATTER);
 
 	if (gameStage % 3 != 0)
 	{
-		for (int i = 0; i < mobNumber; i++)
+		for (int i = 0; i < mobNumber * gameMode; i++)
 		{
-			Unit m("mob", "()", 3 * gameLevel + (double)gameStage / 3 * gameLevel,
-				10 + gameStage * (2 + gameLevel), 5 + gameStage * (gameLevel), 3 + gameStage * (1 + gameLevel));
+			Unit m("mob", "()", 8 + gameLevel*2 + (double)gameStage / 4,
+				10 + gameStage * (2 + gameLevel), 5 + gameStage * gameLevel, 3 + gameStage * (1 + gameLevel));
 			mob.push_back(m);
 		}
 	}
 	else
 	{
-		for (int i = 0; i < mobNumber; i++)
+		for (int i = 0; i < mobNumber * gameMode; i++)
 		{
-			Unit m("mob", "><", 6 * gameLevel + (double)gameStage / 2 * gameLevel,
-				10 + gameStage * gameLevel, 5 + gameStage * (gameLevel), 3 + gameStage * (2 + gameLevel));
+			Unit m("mob", "><", 12 + gameLevel*2 + (double)gameStage / 3,
+				10 + gameStage * (1 + gameLevel), 5 + gameStage * gameLevel, 3 + gameStage * (2 + gameLevel));
 			mob.push_back(m);
 		}
 	}
 
 }
 
-void mainMenu(void)
+void MainMenu(void)
 {
 	int input;
 	int menu = 1;
-	setcolor(15);
 	while (1)
 	{
-		mainMenuPrint(menu);
+		MainMenuPrint(menu);
 		input = _getch();
 
-		if (input == INPUT_KEY(SCAN_CODE))
+		if (input == InputKey(SCAN_CODE))
 		{
 			input = _getch();
 			switch (input)
 			{
-			case INPUT_KEY(UP):
+			case InputKey(UP):
 				if (menu > 1) menu--;
 				else menu = mainMenuNum;
 				break;
-			case INPUT_KEY(DOWN):
+			case InputKey(DOWN):
 				if (menu < mainMenuNum) menu++;
 				else menu = 1;
 				break;
@@ -114,21 +120,23 @@ void mainMenu(void)
 		{
 			switch (input)
 			{
-			case INPUT_KEY(ENTER):
+			case 'z':
+			case InputKey(ENTER):
 				if (menu == mainMenuNum){
 					gameRun = OFF;
 					gamePlay = OFF;
 					return;
 				}
-				else if (menu == 1) selectMode(input);
+				else if (menu == 1) SelectMode(input);
+				else if (menu == 3) OptionMenu();
 				else{
-					gotoxy(0, PLAY_LINES);
+					Gotoxy(0, PLAY_LINES);
 					printf("아직 준비되지 않은 메뉴입니다.");
 					Sleep(500);
 				}
 				if (gamePlay) return;
 				break;
-			case INPUT_KEY(ESC):
+			case InputKey(ESC):
 				gameRun = OFF;
 				gamePlay = OFF;
 				return;
@@ -137,24 +145,101 @@ void mainMenu(void)
 	}
 	return;
 }
-void selectMode(int input)
+void OptionMenu(void)
 {
+	int input;
 	int menu = 1;
+	int menu2 = gameSpeed;
+	int menu3 = lowSpecMode + 1;
 	while (1)
 	{
-		modeMenuPrint(menu);
+		OptionMenuPrint(menu, menu2, menu3);
 		input = _getch();
 
-		if (input == INPUT_KEY(SCAN_CODE))
+		if (input == InputKey(SCAN_CODE))
 		{
 			input = _getch();
 			switch (input)
 			{
-			case INPUT_KEY(UP):
+			case InputKey(UP):
+				if (menu > 1) menu--;
+				else menu = gameOptionListNum;
+				break;
+			case InputKey(DOWN):
+				if (menu < gameOptionListNum) menu++;
+				else menu = 1;
+				break;
+			case InputKey(LEFT):
+				if (menu == 1)
+				{
+					if (menu2 > 1) menu2--;
+					else menu2 = gameSpeedListNum;
+				}
+				else if (menu == 2)
+				{
+					if (menu3 > 1) menu3--;
+					else menu3 = 2;
+				}
+				break;
+			case InputKey(RIGHT):
+				if (menu == 1)
+				{
+					if (menu2 < gameSpeedListNum) menu2++;
+					else menu2 = 1;
+				}
+				else if (menu == 2)
+				{
+					if (menu3 < 2) menu3++;
+					else menu3 = 1;
+				}
+				break;
+			}
+		}
+		else
+		{
+			switch (input)
+			{
+			case 'z':
+			case InputKey(ENTER):
+				if (menu == gameOptionListNum)
+					return;
+				else if (menu == 1)
+				{
+					if (menu2 < gameSpeedListNum) menu2++;
+					else menu2 = 1;
+				}
+				else if (menu == 2)
+				{
+					if (menu3 < 2) menu3++;
+					else menu3 = 1;
+				}
+				break;
+			case 'x':
+			case InputKey(ESC):
+				return;
+			}
+		}
+	}
+	return;
+}
+void SelectMode(int input)
+{
+	int menu = 1;
+	while (1)
+	{
+		ModeMenuPrint(menu);
+		input = _getch();
+
+		if (input == InputKey(SCAN_CODE))
+		{
+			input = _getch();
+			switch (input)
+			{
+			case InputKey(UP):
 				if (menu > 1) menu--;
 				else menu = modeMenuNum;
 				break;
-			case INPUT_KEY(DOWN):
+			case InputKey(DOWN):
 				if (menu < modeMenuNum) menu++;
 				else menu = 1;
 				break;
@@ -164,16 +249,18 @@ void selectMode(int input)
 		{
 			switch (input)
 			{
-			case INPUT_KEY(ENTER):
+			case 'z':
+			case InputKey(ENTER):
 				if (menu == modeMenuNum){
 					gamePlay = OFF;
 					return;
 				}
 				gameLevel = menu;
-				selectHero();
+				SelectHero();
 				if (gamePlay) return;
 				break;
-			case INPUT_KEY(ESC):
+			case 'x':
+			case InputKey(ESC):
 				gamePlay = OFF;
 				return;
 			}
@@ -181,25 +268,25 @@ void selectMode(int input)
 	}
 	return;
 }
-void selectHero(void)
+void SelectHero(void)
 {
 	int input;
 	int menu = 1;
 	while (1)
 	{
-		heroListPrint(menu);
+		HeroListPrint(menu);
 		input = _getch();
 
-		if (input == INPUT_KEY(SCAN_CODE))
+		if (input == InputKey(SCAN_CODE))
 		{
 			input = _getch();
 			switch (input)
 			{
-			case INPUT_KEY(UP):
+			case InputKey(UP):
 				if (menu > 1) menu--;
 				else menu = heroListNum;
 				break;
-			case INPUT_KEY(DOWN):
+			case InputKey(DOWN):
 				if (menu < heroListNum) menu++;
 				else menu = 1;
 				break;
@@ -209,16 +296,18 @@ void selectHero(void)
 		{
 			switch (input)
 			{
-			case INPUT_KEY(ENTER):
+			case 'z':
+			case InputKey(ENTER):
 				if (menu == heroListNum){
 					gamePlay = OFF;
 					return;
 				}
 				heroType = menu;
-				heroCreate();
+				HeroCreate();
 				gamePlay = ON;
 				return;
-			case INPUT_KEY(ESC):
+			case 'x':
+			case InputKey(ESC):
 				gamePlay = OFF;
 				return;
 			}
@@ -226,25 +315,89 @@ void selectHero(void)
 	}
 	return;
 }
-void gameOver(void)
+void suspensionOption(void)
 {
 	int input;
 	int menu = 1;
+
+	suspensionOptionPrint();
+	while (getchar() != '\n');
+
 	while (1)
 	{
-		gameOverListPrint(menu);
+		suspensionOptionListPrint(menu);
 		input = _getch();
 
-		if (input == INPUT_KEY(SCAN_CODE))
+		if (input == InputKey(SCAN_CODE))
 		{
 			input = _getch();
 			switch (input)
 			{
-			case INPUT_KEY(UP):
+			case InputKey(UP):
+				if (menu > 1) menu--;
+				else menu = suspensionOptionListNum;
+				break;
+			case InputKey(DOWN):
+				if (menu < suspensionOptionListNum) menu++;
+				else menu = 1;
+				break;
+			}
+		}
+		else
+		{
+			switch (input)
+			{
+			case 'z':
+			case InputKey(ENTER):
+				if (menu == suspensionOptionListNum)
+				{
+					if (!player.empty()) player.clear();
+					if (!mob.empty()) mob.clear();
+					while (!dummy.empty()) dummy.pop();
+					while (!skill.empty()) skill.pop();
+					system("cls");
+					gamePlay = OFF;
+					return;
+				}
+				else if (menu == 2)
+				{
+					OptionMenu();
+					break;
+				}
+				else
+				{
+					gamePlay = ON;
+					return;
+				}
+			}
+		}
+	}
+	return;
+}
+
+void GameOver(void)
+{
+	int input;
+	int menu = 1;
+
+	GameOverPrint();
+	while (getchar() != '\n');
+
+	while (1)
+	{
+		GameOverListPrint(menu);
+		input = _getch();
+
+		if (input == InputKey(SCAN_CODE))
+		{
+			input = _getch();
+			switch (input)
+			{
+			case InputKey(UP):
 				if (menu > 1) menu--;
 				else menu = gameOverListNum;
 				break;
-			case INPUT_KEY(DOWN):
+			case InputKey(DOWN):
 				if (menu < gameOverListNum) menu++;
 				else menu = 1;
 				break;
@@ -254,27 +407,30 @@ void gameOver(void)
 		{
 			switch (input)
 			{
-			case INPUT_KEY(ENTER):
+			case 'z':
+			case InputKey(ENTER):
 				if (menu == gameOverListNum)
 				{
-					player.clear();
-					mob.clear();
+					if (!player.empty()) player.clear();
+					if (!mob.empty()) mob.clear();
+					while (!dummy.empty()) dummy.pop();
+					while (!skill.empty()) skill.pop();
 					system("cls");
 					gamePlay = OFF;
 					return;
 				}
-				if (player.at(0).having_heart() > 0)
+				if (player.at(0).havingHeart() > 0)
 				{
 					player.at(0).revive();
+					gamePlay = ON;
+					return;
 				}
 				else{
-					gotoxy(CONSOLE_COLS / 3 + 3, CONSOLE_LINES / 4 * 2);
-					setcolor(10);
+					Gotoxy(CONSOLE_COLS / 3 + 3, CONSOLE_LINES / 3 + 8);
+					Setcolor(15);
 					printf(" 더 이상 생명이 없습니다. ");
 					Sleep(500);
 				}
-				gamePlay = ON;
-				return;
 			}
 		}
 	}

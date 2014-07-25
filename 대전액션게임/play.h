@@ -6,7 +6,7 @@
 
 #include "stdafx.h"
 
-void gameRunLoop(void);
-void gamePlayLoop(void);
+void GameRunLoop(void);
+void GamePlayLoop(void);
 
 #endif

@@ -6,11 +6,38 @@
 
 #include "stdafx.h"
 
-enum SWITCH{ OFF, ON };
-enum MOB_MOVE_FORM{ SCATTER, MASS };
-enum HERO_TYPE{ INYO = 1 };
-enum GAME_LEVEL{ VERY_EASY, EASY, NOMAL, HARD, VERY_HARD, CRAZY };
-enum GAME_SPEED{ VERY_SLOW, SLOW, MODERATE, FAST, VERY_FAST, NO_LIMIT };
+enum OnOff
+{
+	OFF,
+	ON,
+};
+enum MobMoveForm
+{
+	SCATTER = 1,
+	MASS,
+};
+enum HeroType
+{
+	INYO = 1,
+};
+enum GameLevel
+{
+	VERY_EASY = 1,
+	EASY,
+	NOMAL,
+	HARD,
+	VERY_HARD,
+	CRAZY,
+};
+enum GameSpeed
+{
+	VERY_SLOW = 1,
+	SLOW,
+	MODERATE, 
+	FAST,
+	VERY_FAST,
+	NO_LIMIT, 
+};
 
 extern int gameSpeed;
 extern int gameStage;
@@ -30,13 +57,15 @@ extern std::vector<Unit> mob;
 extern std::queue<Skill> skill;
 extern std::queue<Dummy> dummy;
 
-void heroCreate(void);
-void respawne(void);
-void initPlay(void);
+void HeroCreate(void);
+void Respawne(void);
+void InitPlay(void);
 
-void mainMenu(void);
-void selectMode(int input);
-void selectHero(void);
-void gameOver(void);
+void MainMenu(void);
+void OptionMenu(void);
+void SelectMode(int input);
+void SelectHero(void);
+void suspensionOption(void);
+void GameOver(void);
 
 #endif

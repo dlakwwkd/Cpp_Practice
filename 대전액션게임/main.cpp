@@ -8,9 +8,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	argc; argv;
 
 	gameRun = ON;
+	gameSpeed = GameSpeed(MODERATE);
+	lowSpecMode = OFF;
 
-	initConsole();
-	gameRunLoop();
-	closeMessage();
+	InitConsole();
+	GameRunLoop();
+	CloseMessage();
 	return 0;
 }

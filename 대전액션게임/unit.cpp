@@ -19,11 +19,11 @@ name(pc.name), shape(pc.shape), speed(pc.speed), hp(pc.hp), mp(pc.mp), damage(pc
 
 Unit::~Unit(){}
 
-POINT Unit::now_pos(void)
+POINT Unit::nowPos(void)
 {
 	return pos;
 }
-void Unit::show_pos(void)
+void Unit::showPos(void)
 {
 	if (is_dead) return;
 	Print::get().inText(pos.x, pos.y, shape);
@@ -36,29 +36,29 @@ void Unit::ai(int reduce)
 	move_power.x = (to_pos.x - pos.x) * speed / reduce;
 	move_power.y = (to_pos.y - pos.y) * speed / reduce;
 }
-void Unit::move_type(void)
+void Unit::moveType(void)
 {
 	switch (gameMode)
 	{
-	case MOB_MOVE_FORM(SCATTER):
-		move_action(move);
+	case MobMoveForm(SCATTER):
+		moveAction(move);
 		break;
-	case MOB_MOVE_FORM(MASS):
-		move_action(public_move);
+	case MobMoveForm(MASS):
+		moveAction(public_move);
 		break;
 	}
 }
-void Unit::move_action(POINT_D &move)
+void Unit::moveAction(POINT_D &move)
 {
-	if (move_power.x > 1 || move_power.x < -1) move_power.x -= move_power.x / 16;
+	if (move_power.x > 1 || move_power.x < -1) move_power.x -= move_power.x / 5;
 	else move_power.x = 0;
 
-	if (move_power.y > 1 || move_power.y < -1) move_power.y -= move_power.y / 16;
+	if (move_power.y > 1 || move_power.y < -1) move_power.y -= move_power.y / 5;
 	else move_power.y = 0;
 
 	if (move_power.x)
 	{
-		move.x += move_power.x / 8;
+		move.x += move_power.x / 5;
 
 		if (move.x < 0)
 			move.x = 0;
@@ -67,7 +67,7 @@ void Unit::move_action(POINT_D &move)
 	}
 	if (move_power.y)
 	{
-		move.y += move_power.y / 8;
+		move.y += move_power.y / 5;
 
 		if (move.y < 0)
 			move.y = 0;
@@ -76,24 +76,21 @@ void Unit::move_action(POINT_D &move)
 	}
 	pos = { (LONG)move.x, (LONG)move.y };
 }
-void Unit::be_attacked(int damage_earn)
+void Unit::beAttacked(int damage_earn)
 {
 	if (hp > damage_earn) hp -= damage_earn;
 	else hp = 0;
-
-	Print::get().inColor(pos.x, pos.y, 218);
-	Print::get().inColor(pos.x + 2, pos.y, DEF_COLOR(SCREEN));
-
-	if (hp <= 0){
-		Print::get().inColor(pos.x, pos.y, 76);
-		Print::get().inColor(pos.x + 2, pos.y, DEF_COLOR(SCREEN));
+	hitColor.push_back({pos.x, pos.y});
+	if (hp <= 0)
+	{
+		deathColor.push_back({ pos.x, pos.y });
 		Print::get().inText(pos.x, pos.y, "00");
 		is_dead = true;
 
-		player.at(0).level_up();
+		player.at(0).levelUp();
 	}
 }
-bool Unit::use_mp(int need_mp)
+bool Unit::useMp(int need_mp)
 {
 	if (mp > need_mp)
 	{
@@ -106,14 +103,14 @@ bool Unit::use_mp(int need_mp)
 		return false;
 	}
 }
-bool Unit::dead_check(void)
+bool Unit::deadCheck(void)
 {
 	if (is_dead) return true;
 	else return false;
 }
 int Unit::attack(void)
 {
-	player.at(0).add_delay();
+	player.at(0).addDelay();
 	Print::get().printBottom();
 	return damage;
 }

@@ -30,7 +30,7 @@ Inyo::Inyo() : Hero()
 {
 	name = "Inyo";
 	shape = "[]";
-	speed = 12;
+	speed = 5;
 	hp = 100;
 	mp = 100;
 	damage = 20;
@@ -44,7 +44,7 @@ Inyo::Inyo(POINT pc) : Hero()
 	move.y = (LONG)pos.y;
 	name = "Inyo";
 	shape = "[]";
-	speed = 12;
+	speed = 5;
 	hp = 100;
 	mp = 100;
 	damage = 20;
@@ -53,26 +53,26 @@ Inyo::Inyo(POINT pc) : Hero()
 }
 Inyo::~Inyo(){}
 
-void Hero::show_pos(void)
+void Hero::showPos(void)
 {
 	if (is_dead) return;
-	Print::get().inColor(pos.x, pos.y, 14);
-	Print::get().inColor(pos.x + 2, pos.y, DEF_COLOR(SCREEN));
+	if (!lowSpecMode)
+		heroColor.push_back({ pos.x, pos.y });
 	Print::get().inText(pos.x, pos.y, shape);
 }
-void Hero::hit_check(int mob_num)
+void Hero::hitCheck(int mob_num)
 {
 	if (delay == 0 &&
-		pos.x > mob.at(mob_num).now_pos().x -2 &&
-		pos.x < mob.at(mob_num).now_pos().x + 2 &&
-		pos.y == mob.at(mob_num).now_pos().y)
+		pos.x > mob.at(mob_num).nowPos().x -2 &&
+		pos.x < mob.at(mob_num).nowPos().x + 2 &&
+		pos.y == mob.at(mob_num).nowPos().y)
 	{
-		be_attacked(mob.at(mob_num).attack());
+		beAttacked(mob.at(mob_num).attack());
 	}
 }
-void Hero::dead_check(void)
+void Hero::deadCheck(void)
 {
-	if (is_dead) gameOver();
+	if (is_dead) GameOver();
 }
 void Hero::revive(void)
 {
@@ -81,83 +81,87 @@ void Hero::revive(void)
 	is_dead = false;
 	heart--;
 }
-void Hero::level_up(void)
+void Hero::levelUp(void)
 {
-	max_hp += 1;
+	max_hp += 2;
 	max_mp += 1;
 }
-void Hero::hp_status(void)
+void Hero::hpStatus(void)
 {
 	double now_hp = (double)hp * 50 / max_hp;
 
-	setcolor(252); printf("   HP "); setcolor(206);
+	Setcolor(252); printf("   HP "); Setcolor(206);
 	for (int i = 0; i < (int)now_hp; i++)
 		printf(" ");
-	setcolor(252);
-	printf(" %4d/%4d", hp, max_hp);
-	setcolor(249);
+	Setcolor(252);
+	printf(" %5d/%5d", hp, max_hp);
+	Setcolor(249);
 	for (int i = 50; i >(int)now_hp; i--)
 		printf(" ");
-	printf("  공격 : Z key    조준 : X key    ");
+	printf(" \t\t 공격 : Z key    조준 : X key   \t\t\t");
 
 	if (player.at(0).hp < max_hp)
-		player.at(0).hp += 1 + max_hp / 300;
+		player.at(0).hp += 2 + max_hp / 300;
 }
-void Hero::mp_status(void)
+void Hero::mpStatus(void)
 {
 	double now_mp = (double)mp * 50 / max_mp;
 
-	setcolor(249); printf("   MP "); setcolor(158);
+	Setcolor(249); printf("   MP "); Setcolor(158);
 	for (int i = 0; i < (int)now_mp; i++)
 		printf(" ");
-	setcolor(249);
-	printf(" %4d/%4d", mp, max_mp);
+	Setcolor(249);
+	printf(" %5d/%5d", mp, max_mp);
 	for (int i = 50; i >(int)now_mp; i--)
 		printf(" ");
-	printf("  스킬1: X -> Z   스킬2: X -> C   ");
+	printf(" \t\t 스킬1: X -> Z   스킬2: X -> C  \t\t\t");
 
 	if (player.at(0).mp < max_mp)
-		player.at(0).mp += 2 + max_mp / 300;
+		player.at(0).mp += 3 + max_mp / 200;
 }
-void Hero::init_delay(void)
+void Hero::initDelay(void)
 {
 	if (delay > 0)
 		delay--;
 	else delay = 0;
 }
-void Hero::add_delay(void)
+void Hero::addDelay(void)
 {
 	delay += 2;
 }
-void Hero::move_input(int input_key)
+void Hero::moveInput(int input)
 {
-	switch (input_key)
+	switch (input)
 	{
-	case INPUT_KEY(UP):
-		move_power.y -= speed / 2;
+	case InputKey(UP):
+		if (move_power.y > -50)
+			move_power.y -= speed / 2;
 		break;
-	case INPUT_KEY(DOWN):
-		move_power.y += speed / 2;
+	case InputKey(DOWN):
+		if (move_power.y < 50)
+			move_power.y += speed / 2;
 		break;
-	case INPUT_KEY(LEFT):
-		move_power.x -= speed;
+	case InputKey(LEFT):
+		if (move_power.x > -50)
+			move_power.x -= speed;
 		break;
-	case INPUT_KEY(RIGHT):
-		move_power.x += speed;
+	case InputKey(RIGHT):
+		if (move_power.x < 50)
+			move_power.x += speed;
 		break;
 	}
 }
-void Hero::move_action(void)
+void Hero::moveAction(void)
 {
-	if (move_power.x > 1 || move_power.x < -1) move_power.x -= move_power.x / 16;
+	if (move_power.x > 1 || move_power.x < -1) move_power.x -= move_power.x / 10;
 	else move_power.x = 0;
 
-	if (move_power.y > 1 || move_power.y < -1) move_power.y -= move_power.y / 16;
+	if (move_power.y > 1 || move_power.y < -1) move_power.y -= move_power.y / 10;
 	else move_power.y = 0;
 
 	if (move_power.x)
 	{
-		move.x += move_power.x / 8;
+		move.x += move_power.x / 10;
 
 		if (move.x < 0)
 			move.x = 0;
@@ -166,7 +170,7 @@ void Hero::move_action(void)
 	}
 	if (move_power.y)
 	{
-		move.y += move_power.y / 8;
+		move.y += move_power.y / 10;
 
 		if (move.y < 0)
 			move.y = 0;
@@ -175,7 +179,7 @@ void Hero::move_action(void)
 	}
 	pos = { (LONG)move.x, (LONG)move.y };
 }
-void Hero::skill_on(int skill_type)
+void Hero::skillOn(int skill_type)
 {
 	if (designateMode)
 	{
@@ -193,9 +197,9 @@ void Hero::skill_on(int skill_type)
 		{
 			Dummy dumy2(player.at(0).pos);
 			dummy.push(dumy2);
-			dummy.back().ai(12);
+			dummy.back().ai(3);
 
-			Skill c("C", { 0, 0, 0, 0 }, 0, 0, 12);
+			Skill c("C", { 0, 0, 0, 0 }, 0, 0, 15);
 			skill.push(c);
 			designateMode = OFF;
 		}
@@ -204,9 +208,9 @@ void Hero::skill_on(int skill_type)
 		if (skill_type == 'z')
 		{
 			Skill z("Z",
-			{ player.at(0).pos.x - 2, player.at(0).pos.y,
-			player.at(0).pos.x + 3, player.at(0).pos.y + 2 },
-			10, 2, 3);
+			{ player.at(0).pos.x - 4, player.at(0).pos.y - 1,
+			player.at(0).pos.x + 5, player.at(0).pos.y + 3 },
+			10, 1, 2);
 			skill.push(z);
 		}
 		else if (skill_type == 'x')
@@ -219,17 +223,17 @@ void Hero::skill_on(int skill_type)
 		{
 			for (unsigned int i = 0; i < mob.size(); i++)
 			{
-				mob.at(i).be_attacked(100);
+				mob.at(i).beAttacked(100);
 			}
 		}
 	}
 }
-void Hero::skill_check(void)
+void Hero::skillCheck(void)
 {
 	if (skill.empty()) return;
-	else skill.front().skill_use();
+	else skill.front().skillUse();
 }
-int Hero::having_heart(void)
+int Hero::havingHeart(void)
 {
 	return heart;
 }

@@ -6,7 +6,7 @@
 
 #include "stdafx.h"
 
-enum SKILL_EFFECT
+enum SkillEffect
 {
 	RED_YELLO = 206,
 	SKY_BLUE = 191,
@@ -15,19 +15,19 @@ enum SKILL_EFFECT
 
 class Skill
 {
+public:
+	Skill();
+	Skill(std::string nm, RECT rt, int dm, int mana, int cool);
+	Skill(const Skill &pc);
+
+	void skillEffect(int effect_color);
+	void skillUse(void);
 protected:
 	RECT rect;
 	std::string name;
 	int damage;
 	int need_mana;
 	int cooldown;
-public:
-	Skill();
-	Skill(std::string nm, RECT rt, int dm, int mana, int cool);
-	Skill(const Skill &pc);
-
-	void skill_effect(int effect_color);
-	void skill_use(void);
 };
 
 #endif

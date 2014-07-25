@@ -3,68 +3,43 @@
 
 #include "stdafx.h"
 
-void gameRunLoop(void)
+void GameRunLoop(void)
 {
 	while (gameRun)
 	{
 		Print::get().printTop();
 		Print::get().printBottom();
-		mainMenu();
-		gamePlayLoop();
+		MainMenu();
+		GamePlayLoop();
 	}
 }
 
-void gamePlayLoop(void)
+void GamePlayLoop(void)
 {
-	initPlay();
-	clock_t delay = CLOCKS_PER_SEC / (30 * gameSpeed);
+	InitPlay();
 	clock_t start = clock();
-	clock_t start2 = clock();
 	while (gamePlay)
 	{
+		clock_t delay = CLOCKS_PER_SEC / (10 * gameSpeed);
 		if (clock() - start > delay)
 		{
 			start = clock();
-			if (!lowSpecMode)
-			{
-				Print::get().printText();
-				Print::get().init();
-			}
+			Print::get().printText();
+			Print::get().printColor();
 			Print::get().frameCheck();
+			Print::get().init();
 
-			player.at(0).move_action();
-			player.at(0).show_pos();
-			player.at(0).init_delay();
-			player.at(0).skill_check();
-			player.at(0).dead_check();
+			player.at(0).moveAction();
+			player.at(0).showPos();
+			player.at(0).initDelay();
+			player.at(0).skillCheck();
 
-			moveAi();
+			MoveAi();
 
-			if (designateMode){
-				dummy.front().show_pos();
-				dummy.front().move_action();
-				if (_kbhit())
-				{
-					inputKey2(_getch());
-				}
-			}
-			else{
-				if (!dummy.empty())
-					dummy.back().move_action();
-				if (_kbhit())
-				{
-					inputKey(_getch());
-				}
-			}
-		}
-		if (lowSpecMode)
-		{
-			if (clock() - start2 > delay * 2)
-			{
-				start2 = clock();
-				Print::get().printText();
-				Print::get().init();
-			}
+			InputCommand();
+
+			if (!player.empty())
+				player.at(0).deadCheck();
 		}
 	}
 }

@@ -11,54 +11,54 @@ name(nm), rect(rt), damage(dm), need_mana(mana), cooldown(cool){}
 Skill::Skill(const Skill &pc) :
 name(pc.name), rect(pc.rect), damage(pc.damage), need_mana(pc.need_mana), cooldown(pc.cooldown){}
 
-void Skill::skill_effect(int effect_color)
+void Skill::skillEffect(int effect_color)
 {
 	cooldown--;
 
-	if (player.at(0).use_mp(need_mana))
+	if (player.at(0).useMp(need_mana))
 	{
 		int i, j;
 		for (j = rect.top; j <= rect.bottom; j++)
 		{
 			if (j == rect.top || j == rect.bottom)
 			{
-				gotoxy(rect.left + 3, j);
-				setcolor(effect_color);
+				Gotoxy(rect.left + 3, j);
+				Setcolor(effect_color);
 				for (i = rect.left + 3; i <= rect.right - 3; i++)
 				{
 					_putch('#');
 				}
-				setcolor(DEF_COLOR(SCREEN));
+				Setcolor(DefColor(SCREEN));
 			}
 			else if (j == rect.top + 1 || j == rect.bottom - 1)
 			{
-				gotoxy(rect.left + 1, j);
-				setcolor(effect_color);
+				Gotoxy(rect.left + 1, j);
+				Setcolor(effect_color);
 				for (i = rect.left + 1; i <= rect.right - 1; i++)
 				{
 					_putch('#');
 				}
-				setcolor(DEF_COLOR(SCREEN));
+				Setcolor(DefColor(SCREEN));
 			}
 			else
 			{
-				gotoxy(rect.left, j);
-				setcolor(effect_color);
+				Gotoxy(rect.left, j);
+				Setcolor(effect_color);
 				for (i = rect.left; i <= rect.right; i++)
 				{
 					_putch('#');
 				}
-				setcolor(DEF_COLOR(SCREEN));
+				Setcolor(DefColor(SCREEN));
 			}
 		}
-		Sleep(gameSpeed*10/(1+lowSpecMode));
+		Sleep(gameSpeed*5/(1+lowSpecMode));
 
 		if (!mob.empty())
 		{
 			for (unsigned int i = 0; i < mob.size(); i++)
 			{
-				if (PtInRect(&rect, mob.at(i).now_pos()))
-					mob.at(i).be_attacked(damage);
+				if (PtInRect(&rect, mob.at(i).nowPos()))
+					mob.at(i).beAttacked(damage);
 			}
 		}
 		
@@ -68,18 +68,18 @@ void Skill::skill_effect(int effect_color)
 		rect.right += 2 * cooldown;
 	}
 }
-void Skill::skill_use(void)
+void Skill::skillUse(void)
 {
 	if (name == "Z")
-		skill_effect(SKILL_EFFECT(SKY_BLUE));
+		skillEffect(SkillEffect(SKY_BLUE));
 	else if (name == "C")
 	{
 		cooldown--;
 
 		Skill c_dummy("C_dummy",
-		{ dummy.back().now_pos().x - 4, dummy.back().now_pos().y - 1,
-		dummy.back().now_pos().x + 5, dummy.back().now_pos().y + 3 },
-		12, 6, 2);
+		{ dummy.back().nowPos().x - 6, dummy.back().nowPos().y - 2,
+		dummy.back().nowPos().x + 7, dummy.back().nowPos().y + 4 },
+		20, 3, 2);
 		skill.push(c_dummy);
 
 		if (cooldown < 1){
@@ -91,7 +91,7 @@ void Skill::skill_use(void)
 	}
 	else if (name == "C_dummy")
 	{
-		skill_effect(SKILL_EFFECT(RED_YELLO));
+		skillEffect(SkillEffect(RED_YELLO));
 	}
 
 	if (cooldown < 1)

@@ -3,18 +3,18 @@
 
 #include "stdafx.h"
 
-void initConsole(void)
+void InitConsole(void)
 {
-	system("mode con: lines=43 cols=100");
+	system("mode con: lines=45 cols=135");
 }
 
-void gotoxy(int x, int y)
+void Gotoxy(int x, int y)
 {
 	COORD pos = { x, y };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
-void setcolor(int color)
+void Setcolor(int color)
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }

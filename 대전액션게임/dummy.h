@@ -13,7 +13,7 @@ public:
 	Dummy(POINT pc);
 	~Dummy();
 
-	void show_pos(void);
+	void showPos(void);
 	void ai(int reduce);
 };
 

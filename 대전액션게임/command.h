@@ -6,7 +6,7 @@
 
 #include "stdafx.h"
 
-enum INPUT_KEY
+enum InputKey
 {
 	SCAN_CODE = 224,
 	ENTER = 13,
@@ -14,10 +14,13 @@ enum INPUT_KEY
 	UP = 72,
 	DOWN = 80,
 	LEFT = 75,
-	RIGHT = 77
+	RIGHT = 77,
+	Z_KEY = 0x5A,
+	X_KEY = 0x58,
+	C_KEY = 0x43,
+	V_KEY = 0x56
 };
 
-void inputKey(int input);
-void inputKey2(int input);
+void InputCommand();
 
 #endif

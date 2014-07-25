@@ -7,7 +7,7 @@ Dummy::Dummy() : Hero()
 {
 	name = "dumy";
 	shape = "+";
-	speed = 12;
+	speed = 5;
 }
 Dummy::Dummy(POINT pc) : Hero()
 {
@@ -17,15 +17,15 @@ Dummy::Dummy(POINT pc) : Hero()
 
 	name = "dumy";
 	shape = "+";
-	speed = 12;
+	speed = 5;
 }
 Dummy::~Dummy(){}
 
-void Dummy::show_pos(void)
+void Dummy::showPos(void)
 {
 	if (is_dead) return;
-	Print::get().inColor(pos.x, pos.y, 11);
-	Print::get().inColor(pos.x + 1, pos.y, DEF_COLOR(SCREEN));
+	if (!lowSpecMode)
+		scopeColor.push_back({ pos.x, pos.y });
 	Print::get().inText(pos.x, pos.y, shape);
 }
 void Dummy::ai(int reduce)
