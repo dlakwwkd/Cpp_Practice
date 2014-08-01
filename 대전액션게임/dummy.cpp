@@ -1,7 +1,5 @@
-// dummy.cpp : Dummy 클래스와 그 자식 클래스들을 정의합니다.
-//
-
 #include "stdafx.h"
+
 
 Dummy::Dummy() : Hero()
 {

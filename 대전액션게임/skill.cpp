@@ -1,15 +1,47 @@
-// skill.cpp : skill 클래스와 그 자식 클래스들을 정의합니다.
-//
-
 #include "stdafx.h"
 
-Skill::Skill() : name("skill"), rect({ 0, 0, 0, 0 }), damage(0), need_mana(0), cooldown(1){}
+
+Skill::Skill() : owner(NULL), name("skill"), rect({ 0, 0, 0, 0 }), damage(0), need_mana(0), cooldown(1){}
 
 Skill::Skill(std::string nm, RECT rt, int dm, int mana, int cool) :
-name(nm), rect(rt), damage(dm), need_mana(mana), cooldown(cool){}
+owner(NULL), name(nm), rect(rt), damage(dm), need_mana(mana), cooldown(cool){}
 
 Skill::Skill(const Skill &pc) :
-name(pc.name), rect(pc.rect), damage(pc.damage), need_mana(pc.need_mana), cooldown(pc.cooldown){}
+owner(NULL), name(pc.name), rect(pc.rect), damage(pc.damage), need_mana(pc.need_mana), cooldown(pc.cooldown){}
+
+Skill::~Skill()
+{
+	if (owner != NULL)
+		delete owner;
+}
+
+void Skill::setPlayerType(int type)
+{
+	if (owner == NULL)
+		owner = new Player;
+	owner->setPlayerType(type);
+}
+
+void Skill::setTeamType(int type)
+{
+	if (owner == NULL)
+		owner = new Player;
+	owner->setTeamType(type);
+}
+
+int Skill::checkPlayerType(void)
+{
+	if (owner == NULL)
+		return -1;
+	return owner->checkPlayerType();
+}
+
+int Skill::checkTeamType(void)
+{
+	if (owner == NULL)
+		return -1;
+	return owner->checkTeamType();
+}
 
 void Skill::skillEffect(int effect_color)
 {
@@ -32,11 +64,11 @@ void Skill::skillEffect(int effect_color)
 	}
 	if (rect.right > PLAY_COLS + 1)
 	{
-		rect.left += (PLAY_COLS +1 ) - rect.right;
+		rect.left += (PLAY_COLS + 1) - rect.right;
 		rect.right += (PLAY_COLS + 1) - rect.right;
 	}
 
-	if (player.at(0).useMp(need_mana))
+	if (player[this->checkPlayerType()].useMp(need_mana))
 	{
 		int i, j;
 		for (j = rect.top; j <= rect.bottom; j++)
@@ -72,17 +104,37 @@ void Skill::skillEffect(int effect_color)
 				Setcolor(DefColor(SCREEN));
 			}
 		}
-		Sleep(gameSpeed*5/(1+lowSpecMode));
 
 		if (!mob.empty())
 		{
 			for (unsigned int i = 0; i < mob.size(); i++)
 			{
 				if (PtInRect(&rect, mob.at(i).nowPos()))
-					mob.at(i).beAttacked(damage);
+					mob.at(i).beAttacked(damage, this->checkPlayerType());
 			}
 		}
-		
+		//임시 구현
+		if (this->checkPlayerType() == PLAYER_1)
+		{
+			if (PtInRect(&rect, player[PLAYER_2].nowPos()))
+			{
+				player[PLAYER_2].beAttacked(damage, this->checkPlayerType());
+				Print::get().printBottom();
+			}
+			else
+				Sleep(gameSpeed * 5 / (1 + lowSpecMode));
+		}
+		else if (this->checkPlayerType() == PLAYER_2)
+		{
+			if (PtInRect(&rect, player[PLAYER_1].nowPos()))
+			{
+				player[PLAYER_1].beAttacked(damage, this->checkPlayerType());
+				Print::get().printBottom();
+			}
+			else
+				Sleep(gameSpeed * 5 / (1 + lowSpecMode));
+		}
+
 		rect.top -= cooldown;
 		rect.bottom += cooldown;
 		rect.left -= 2 * cooldown;
@@ -102,6 +154,8 @@ void Skill::skillUse(void)
 		dummy.back().nowPos().x + 7, dummy.back().nowPos().y + 4 },
 		20, 3, 2);
 		skill.push(c_dummy);
+		skill.back().setPlayerType(this->checkPlayerType());
+		skill.back().setTeamType(this->checkTeamType());
 
 		if (cooldown < 1){
 			while (!dummy.empty())

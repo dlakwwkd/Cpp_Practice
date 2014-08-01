@@ -1,7 +1,5 @@
-// print.cpp : 화면 출력을 위한 print 클래스를 정의합니다.
-//
-
 #include "stdafx.h"
+
 
 std::vector<POINT> hitColor;
 std::vector<POINT> deathColor;
@@ -100,8 +98,12 @@ void Print::printTop()
 		printf("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
 	else
 	{
-		printf(" \t  Stage%4d   \t\t\t    ENTER: 다음 라운드         ESC: 처음으로   \t\t\t\t     남은 생명: %d  \t      ",
-			gameStage, player.at(0).havingHeart());
+		if (playerNum == 1)
+			printf(" \t  Stage%4d   \t\t\t    ENTER: 다음 라운드         ESC: 처음으로   \t\t\t\t     남은 생명: %d  \t      ",
+			gameStage, player[PLAYER_1].havingHeart());
+		else
+			printf(" \t  Stage%4d   \t\t\t   ENTER: 다음 라운드      ESC: 처음으로   \t\t\t   1P 생명: %d      2P 생명: %d      ",
+			gameStage, player[PLAYER_1].havingHeart(), player[PLAYER_2].havingHeart());
 	}
 }
 
@@ -118,8 +120,18 @@ void Print::printBottom()
 	}
 	else
 	{
-		player.at(0).hpStatus();
-		player.at(0).mpStatus();
+		player[PLAYER_1].hpStatus();
+		printf("   ");
+		if (playerNum > 1)
+			player[PLAYER_2].hpStatus();
+		else
+			printf(" \t\t 공격 : Z key    조준 : X key   \t\t\t");
+		player[PLAYER_1].mpStatus();
+		printf("   ");
+		if (playerNum > 1)
+			player[PLAYER_2].mpStatus();
+		else
+			printf(" \t\t 스킬1: X -> Z   스킬2: X -> C  \t\t\t");
 	}
 	Setcolor(DefColor(BOTTOM));
 	printf("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");

@@ -5,57 +5,67 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="클래스">
+      <UniqueIdentifier>{f4b0e4fb-aa62-4841-b9aa-42404b121989}</UniqueIdentifier>
     </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="클래스\유닛">
+      <UniqueIdentifier>{2270ed6e-2d1b-4fce-95d7-2eff483603fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Player.h">
+      <Filter>클래스</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Print.h">
+      <Filter>클래스</Filter>
     </ClInclude>
-    <ClInclude Include="unit.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Skill.h">
+      <Filter>클래스</Filter>
     </ClInclude>
-    <ClInclude Include="ui.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Team.h">
+      <Filter>클래스</Filter>
     </ClInclude>
-    <ClInclude Include="console.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Hero.h">
+      <Filter>클래스\유닛</Filter>
     </ClInclude>
-    <ClInclude Include="command.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Inyo.h">
+      <Filter>클래스\유닛</Filter>
     </ClInclude>
-    <ClInclude Include="play.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Unit.h">
+      <Filter>클래스\유닛</Filter>
+    </ClInclude>
+    <ClInclude Include="Dummy.h">
+      <Filter>클래스\유닛</Filter>
     </ClInclude>
     <ClInclude Include="ai.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="command.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="console.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="play.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="setting.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="print.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="stdafx.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="skill.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="targetver.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="hero.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="ui.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="dummy.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Key.h">
+      <Filter>클래스</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -66,9 +76,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ui.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="unit.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="console.cpp">
@@ -86,17 +93,32 @@
     <ClCompile Include="setting.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="print.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Print.cpp">
+      <Filter>클래스</Filter>
     </ClCompile>
-    <ClCompile Include="skill.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Player.cpp">
+      <Filter>클래스</Filter>
     </ClCompile>
-    <ClCompile Include="hero.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Skill.cpp">
+      <Filter>클래스</Filter>
     </ClCompile>
-    <ClCompile Include="dummy.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Team.cpp">
+      <Filter>클래스</Filter>
+    </ClCompile>
+    <ClCompile Include="Hero.cpp">
+      <Filter>클래스\유닛</Filter>
+    </ClCompile>
+    <ClCompile Include="Inyo.cpp">
+      <Filter>클래스\유닛</Filter>
+    </ClCompile>
+    <ClCompile Include="Unit.cpp">
+      <Filter>클래스\유닛</Filter>
+    </ClCompile>
+    <ClCompile Include="Dummy.cpp">
+      <Filter>클래스\유닛</Filter>
+    </ClCompile>
+    <ClCompile Include="Key.cpp">
+      <Filter>클래스</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

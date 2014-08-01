@@ -34,7 +34,10 @@ void MoveAi(void)
 		}
 		mob.at(i).showPos();
 
-		player.at(0).hitCheck(i);
+		if (playerNum > 0)
+			player[PLAYER_1].hitCheck(i);
+		if (playerNum > 1)
+			player[PLAYER_2].hitCheck(i);
 
 		if (mob.at(i).deadCheck()) mob.erase(mob.begin() + i);
 	}

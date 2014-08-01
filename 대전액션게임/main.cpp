@@ -7,6 +7,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	argc; argv;
 
+	playerNum = 0;
 	gameRun = ON;
 	gameSpeed = GameSpeed(MODERATE);
 	lowSpecMode = OFF;

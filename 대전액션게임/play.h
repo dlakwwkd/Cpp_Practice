@@ -8,5 +8,6 @@
 
 void GameRunLoop(void);
 void GamePlayLoop(void);
+void PlayerAction(int player_num);
 
 #endif

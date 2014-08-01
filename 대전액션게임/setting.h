@@ -39,6 +39,8 @@ enum GameSpeed
 	NO_LIMIT, 
 };
 
+#define MAX_PLAYER_NUM 2
+
 extern int gameSpeed;
 extern int gameStage;
 extern int gameLevel;
@@ -46,26 +48,28 @@ extern int gameFrame;
 extern int gameMode;
 extern int heroType;
 extern int mobNumber;
+extern int playerNum;
+extern int lowSpecMode;
 extern bool gameRun;
 extern bool gamePlay;
-extern bool lowSpecMode;
-extern bool designateMode;
+extern bool designateMode[MAX_PLAYER_NUM];
 extern unsigned int gameTime;
 
-extern std::vector<Hero> player;
+extern std::map<int, Hero> player;
 extern std::vector<Unit> mob;
 extern std::queue<Skill> skill;
 extern std::queue<Dummy> dummy;
 
-void HeroCreate(void);
+void HeroCreate(int player_num);
 void Respawne(void);
 void InitPlay(void);
 
 void MainMenu(void);
 void OptionMenu(void);
+void PlayerMenu(int input);
 void SelectMode(int input);
-void SelectHero(void);
+void SelectHero(int player_num);
 void suspensionOption(void);
-void GameOver(void);
+void GameOver(int player_num);
 
 #endif

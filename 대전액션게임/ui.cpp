@@ -11,6 +11,13 @@ std::string MainMenuList[]
 	"[   게임 설정   ]",
 	"[   게임 종료   ]"
 };
+std::string playerList[]
+=
+{
+	"[   1P 플레이   ]",
+	"[   2P 플레이   ]",
+	"[   이전 화면   ]"
+};
 std::string modeMenuList[]
 =
 {
@@ -66,6 +73,7 @@ std::string lowSpecList[]
 };
 
 int mainMenuNum = _countof(MainMenuList);
+int playerListNum = _countof(playerList);
 int modeMenuNum = _countof(modeMenuList);
 int heroListNum = _countof(heroList);
 int gameOverListNum = _countof(GameOverList);
@@ -83,6 +91,20 @@ void MainMenuPrint(int menu)
 			Print::get().inText(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, "☞");
 		}
 		Print::get().inText(CONSOLE_COLS / 5 * 2 + 3, CONSOLE_LINES / 5 * 2 + i, MainMenuList[i]);
+	}
+	Print::get().printText();
+}
+
+void PlayerListPrint(int menu)
+{
+	Print::get().init();
+	for (int i = 0; i < playerListNum; i++)
+	{
+		if (menu == i + 1)
+		{
+			Print::get().inText(CONSOLE_COLS / 5 * 2, CONSOLE_LINES / 5 * 2 + i, "☞");
+		}
+		Print::get().inText(CONSOLE_COLS / 5 * 2 + 3, CONSOLE_LINES / 5 * 2 + i, playerList[i]);
 	}
 	Print::get().printText();
 }
@@ -151,7 +173,7 @@ void GameOverPrint(void)
 	printf("== [ Game Over ] ==");
 	Gotoxy(CONSOLE_COLS / 5 * 2 + 3, CONSOLE_LINES / 3 + 5);
 	Setcolor(15);
-	printf("   남은 생명: %d ", player.at(0).havingHeart());
+	printf("   남은 생명: %d ", player[PLAYER_1].havingHeart());
 	Gotoxy(CONSOLE_COLS / 5 * 2 + 3, CONSOLE_LINES / 3 + 7);
 	Setcolor(14);
 	printf("Press Enter Key...");

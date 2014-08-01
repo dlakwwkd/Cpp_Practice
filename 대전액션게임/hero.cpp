@@ -1,11 +1,9 @@
-// hero.cpp : hero 클래스와 그 자식 클래스들을 정의합니다.
-//
-
 #include "stdafx.h"
+
 
 Hero::Hero() : Unit()
 {
-	pos = { 20 ,20 };
+	pos = { 20, 20 };
 	move = { 20, 20 };
 
 	delay = 0;
@@ -24,34 +22,10 @@ Hero::Hero(POINT pc) : Unit()
 	max_hp = hp;
 	max_mp = mp;
 }
-Hero::~Hero(){}
+Hero::~Hero()
+{
+}
 
-Inyo::Inyo() : Hero()
-{
-	name = "Inyo";
-	shape = "[]";
-	speed = 5;
-	hp = 100;
-	mp = 100;
-	damage = 20;
-	max_hp = hp;
-	max_mp = mp;
-}
-Inyo::Inyo(POINT pc) : Hero()
-{
-	pos = pc;
-	move.x = (LONG)pos.x;
-	move.y = (LONG)pos.y;
-	name = "Inyo";
-	shape = "[]";
-	speed = 5;
-	hp = 100;
-	mp = 100;
-	damage = 20;
-	max_hp = hp;
-	max_mp = mp;
-}
-Inyo::~Inyo(){}
 
 void Hero::showPos(void)
 {
@@ -63,16 +37,18 @@ void Hero::showPos(void)
 void Hero::hitCheck(int mob_num)
 {
 	if (delay == 0 &&
-		pos.x > mob.at(mob_num).nowPos().x -2 &&
+		pos.x > mob.at(mob_num).nowPos().x - 2 &&
 		pos.x < mob.at(mob_num).nowPos().x + 2 &&
 		pos.y == mob.at(mob_num).nowPos().y)
 	{
-		beAttacked(mob.at(mob_num).attack());
+		addDelay();
+		beAttacked(mob.at(mob_num).attack(), PlayerType(MOB));
+		Print::get().printBottom();
 	}
 }
 void Hero::deadCheck(void)
 {
-	if (is_dead) GameOver();
+	if (is_dead) GameOver(checkPlayerType());
 }
 void Hero::revive(void)
 {
@@ -91,36 +67,38 @@ void Hero::hpStatus(void)
 {
 	double now_hp = (double)hp * 50 / max_hp;
 
-	Setcolor(252); printf("   HP "); Setcolor(206);
+	Setcolor(252); printf("  HP "); Setcolor(206);
 	for (int i = 0; i < (int)now_hp; i++)
 		printf(" ");
 	Setcolor(252);
-	printf(" %5d/%5d", hp, max_hp);
+	printf(" %4d/%4d ", hp, max_hp);
 	Setcolor(249);
 	for (int i = 50; i >(int)now_hp; i--)
 		printf(" ");
-	printf(" \t\t 공격 : Z key    조준 : X key   \t\t\t");
 
-	if (player.at(0).hp < max_hp)
-		player.at(0).hp += 2 + max_hp / 200;
-	else player.at(0).hp = max_hp;
+	if (hp < max_hp)
+		hp += 2 + max_hp / 200;
+	else hp = max_hp;
+	if (hp > max_hp)
+		hp = max_hp;
 }
 void Hero::mpStatus(void)
 {
 	double now_mp = (double)mp * 50 / max_mp;
 
-	Setcolor(249); printf("   MP "); Setcolor(158);
+	Setcolor(249); printf("  MP "); Setcolor(158);
 	for (int i = 0; i < (int)now_mp; i++)
 		printf(" ");
 	Setcolor(249);
-	printf(" %5d/%5d", mp, max_mp);
+	printf(" %4d/%4d ", mp, max_mp);
 	for (int i = 50; i >(int)now_mp; i--)
 		printf(" ");
-	printf(" \t\t 스킬1: X -> Z   스킬2: X -> C  \t\t\t");
 
-	if (player.at(0).mp < max_mp)
-		player.at(0).mp += 10 + max_mp / 200;
-	else player.at(0).mp = max_mp;
+	if (mp < max_mp)
+		mp += 10 + max_mp / 200;
+	else mp = max_mp;
+	if (mp > max_mp)
+		mp = max_mp;
 }
 void Hero::initDelay(void)
 {
@@ -184,7 +162,7 @@ void Hero::moveAction(void)
 }
 void Hero::skillOn(int skill_type)
 {
-	if (designateMode)
+	if (designateMode[checkPlayerType() - 1])
 	{
 		if (skill_type == 'z')
 		{
@@ -193,41 +171,51 @@ void Hero::skillOn(int skill_type)
 			dummy.front().pos.x + 5, dummy.front().pos.y + 3 },
 			15, 5, 3);
 			skill.push(z);
+			skill.back().setPlayerType(checkPlayerType());
+			skill.back().setTeamType(checkTeamType());
 			if (!dummy.empty())
 				dummy.pop();
-			designateMode = OFF;
+			designateMode[checkPlayerType() - 1] = OFF;
 		}
 		else if (skill_type == 'c')
 		{
-			Dummy dumy2(player.at(0).pos);
+			Dummy dumy2(pos);
 			dummy.push(dumy2);
+			dummy.back().setPlayerType(checkPlayerType());
+			dummy.back().setTeamType(checkTeamType());
 			dummy.back().ai(3);
 
 			Skill c("C", { 0, 0, 0, 0 }, 0, 0, 15);
 			skill.push(c);
-			designateMode = OFF;
+			skill.back().setPlayerType(checkPlayerType());
+			skill.back().setTeamType(checkTeamType());
+			designateMode[checkPlayerType() - 1] = OFF;
 		}
 	}
 	else{
 		if (skill_type == 'z')
 		{
 			Skill z("Z",
-			{ player.at(0).pos.x - 4, player.at(0).pos.y - 1,
-			player.at(0).pos.x + 5, player.at(0).pos.y + 3 },
+			{ pos.x - 4, pos.y - 1,
+			pos.x + 5, pos.y + 3 },
 			10, 1, 2);
 			skill.push(z);
+			skill.back().setPlayerType(checkPlayerType());
+			skill.back().setTeamType(checkTeamType());
 		}
 		else if (skill_type == 'x')
 		{
-			designateMode = ON;
-			Dummy dumy(player.at(0).pos);
+			designateMode[checkPlayerType() - 1] = ON;
+			Dummy dumy(pos);
 			dummy.push(dumy);
+			dummy.back().setPlayerType(checkPlayerType());
+			dummy.back().setTeamType(checkTeamType());
 		}
 		else if (skill_type == 'v')
 		{
 			for (unsigned int i = 0; i < mob.size(); i++)
 			{
-				mob.at(i).beAttacked(100);
+				mob.at(i).beAttacked(100, checkPlayerType());
 			}
 		}
 	}
@@ -236,8 +224,4 @@ void Hero::skillCheck(void)
 {
 	if (skill.empty()) return;
 	else skill.front().skillUse();
-}
-int Hero::havingHeart(void)
-{
-	return heart;
 }

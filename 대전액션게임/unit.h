@@ -1,11 +1,4 @@
-// unit.h : Unit 클래스를 선언합니다.
-//
-
-#ifndef __UNIT_H
-#define __UNIT_H
-
-#include "stdafx.h"
-
+#pragma once
 struct POINT_D
 {
 	DOUBLE  x;
@@ -20,16 +13,23 @@ public:
 	Unit(const Unit &pc);
 	~Unit();
 
-	POINT nowPos(void);
+	POINT nowPos(void) { return pos; }
+	bool deadCheck(void) { return is_dead; }
+
+	void setPlayerType(int type);
+	void setTeamType(int type);
+	int checkPlayerType(void);
+	int checkTeamType(void);
+
+	bool useMp(int need_mp);
+	int attack(void);
 	void showPos(void);
 	void ai(int reduce);
 	void moveType(void);
 	void moveAction(POINT_D &move);
-	void beAttacked(int damage_earn);
-	bool useMp(int need_mp);
-	bool deadCheck(void);
-	int attack(void);
+	void beAttacked(int damage_earn, int attack_player);
 protected:
+	Player* owner;
 	POINT pos;
 	POINT to_pos;
 	POINT_D move;
@@ -45,5 +45,3 @@ protected:
 	int damage;
 	bool is_dead;
 };
-
-#endif

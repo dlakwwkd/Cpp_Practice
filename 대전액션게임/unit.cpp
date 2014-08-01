@@ -1,27 +1,71 @@
-// unit.cpp : Unit 클래스를 정의합니다.
-//
-
 #include "stdafx.h"
+
 
 POINT_D Unit::public_move = { 0, 0 };
 
 Unit::Unit() :
-pos({ 0, 0 }), to_pos({ 0, 0 }), move({ 0, 0 }), move_power({ 0, 0 }),
+owner(NULL), pos({ 0, 0 }), to_pos({ 0, 0 }), move({ 0, 0 }), move_power({ 0, 0 }),
 name("unit"), shape("><"), speed(10), hp(20), mp(10), damage(5), is_dead(false){}
 
-Unit::Unit(std::string name, std::string shape, double speed, int hp, int mp, int damage) : 
-pos({ 0, 0 }), to_pos({ 0, 0 }), move({ 0, 0 }), move_power({ 0, 0 }),
+Unit::Unit(std::string name, std::string shape, double speed, int hp, int mp, int damage) :
+owner(NULL), pos({ 0, 0 }), to_pos({ 0, 0 }), move({ 0, 0 }), move_power({ 0, 0 }),
 name(name), shape(shape), speed(speed), hp(hp), mp(mp), damage(damage), is_dead(false){}
 
 Unit::Unit(const Unit &pc) :
-pos(pc.pos), to_pos(pc.to_pos), move(pc.move), move_power(pc.move_power),
+owner(NULL), pos(pc.pos), to_pos(pc.to_pos), move(pc.move), move_power(pc.move_power),
 name(pc.name), shape(pc.shape), speed(pc.speed), hp(pc.hp), mp(pc.mp), damage(pc.damage), is_dead(pc.is_dead){}
 
-Unit::~Unit(){}
-
-POINT Unit::nowPos(void)
+Unit::~Unit()
 {
-	return pos;
+	if (owner != NULL)
+		delete owner;
+}
+
+void Unit::setPlayerType(int type)
+{
+	if (owner == NULL)
+		owner = new Player;
+	owner->setPlayerType(type);
+}
+
+void Unit::setTeamType(int type)
+{
+	if (owner == NULL)
+		owner = new Player;
+	owner->setTeamType(type);
+}
+
+int Unit::checkPlayerType(void)
+{
+	if (owner == NULL)
+		return -1;
+	return owner->checkPlayerType();
+}
+
+int Unit::checkTeamType(void)
+{
+	if (owner == NULL)
+		return -1;
+	return owner->checkTeamType();
+}
+
+
+bool Unit::useMp(int need_mp)
+{
+	if (mp > need_mp)
+	{
+		mp -= need_mp;
+		return true;
+	}
+	else
+	{
+		mp = 0;
+		return false;
+	}
+}
+int Unit::attack(void)
+{
+	return damage;
 }
 void Unit::showPos(void)
 {
@@ -32,7 +76,10 @@ void Unit::ai(int reduce)
 {
 	if (rand() % (7 - gameLevel) == 0)
 	{
-		to_pos = player.at(0).nowPos();
+		if (rand() % playerNum == 0)
+			to_pos = player[PLAYER_1].nowPos();
+		else
+			to_pos = player[PLAYER_2].nowPos();
 	}
 	else
 	{
@@ -82,41 +129,18 @@ void Unit::moveAction(POINT_D &move)
 	}
 	pos = { (LONG)move.x, (LONG)move.y };
 }
-void Unit::beAttacked(int damage_earn)
+void Unit::beAttacked(int damage_earn, int attack_player)
 {
 	if (hp > damage_earn) hp -= damage_earn;
 	else hp = 0;
-	hitColor.push_back({pos.x, pos.y});
+	hitColor.push_back({ pos.x, pos.y });
 	if (hp <= 0)
 	{
 		deathColor.push_back({ pos.x, pos.y });
 		Print::get().inText(pos.x, pos.y, "00");
 		is_dead = true;
 
-		player.at(0).levelUp();
+		if (attack_player != PlayerType(MOB))
+			player[attack_player].levelUp();
 	}
-}
-bool Unit::useMp(int need_mp)
-{
-	if (mp > need_mp)
-	{
-		mp -= need_mp;
-		return true;
-	}
-	else
-	{
-		mp = 0;
-		return false;
-	}
-}
-bool Unit::deadCheck(void)
-{
-	if (is_dead) return true;
-	else return false;
-}
-int Unit::attack(void)
-{
-	player.at(0).addDelay();
-	Print::get().printBottom();
-	return damage;
 }

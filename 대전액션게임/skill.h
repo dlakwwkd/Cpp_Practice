@@ -1,11 +1,4 @@
-// skill.h : skill 클래스와 그 자식 클래스들을 선언합니다.
-//
-
-#ifndef __SKILL_H
-#define __SKILL_H
-
-#include "stdafx.h"
-
+#pragma once
 enum SkillEffect
 {
 	RED_YELLO = 206,
@@ -19,15 +12,20 @@ public:
 	Skill();
 	Skill(std::string nm, RECT rt, int dm, int mana, int cool);
 	Skill(const Skill &pc);
+	~Skill();
+
+	void setPlayerType(int type);
+	void setTeamType(int type);
+	int checkPlayerType(void);
+	int checkTeamType(void);
 
 	void skillEffect(int effect_color);
 	void skillUse(void);
 protected:
+	Player* owner;
 	RECT rect;
 	std::string name;
 	int damage;
 	int need_mana;
 	int cooldown;
 };
-
-#endif

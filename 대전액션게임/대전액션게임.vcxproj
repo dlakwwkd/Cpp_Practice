@@ -83,34 +83,42 @@
     <ClInclude Include="ai.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="console.h" />
-    <ClInclude Include="dummy.h" />
-    <ClInclude Include="hero.h" />
+    <ClInclude Include="Dummy.h" />
+    <ClInclude Include="Hero.h" />
+    <ClInclude Include="Inyo.h" />
+    <ClInclude Include="Key.h" />
     <ClInclude Include="play.h" />
-    <ClInclude Include="print.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Print.h" />
     <ClInclude Include="setting.h" />
-    <ClInclude Include="skill.h" />
+    <ClInclude Include="Skill.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Team.h" />
     <ClInclude Include="ui.h" />
-    <ClInclude Include="unit.h" />
+    <ClInclude Include="Unit.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ai.cpp" />
     <ClCompile Include="command.cpp" />
     <ClCompile Include="console.cpp" />
-    <ClCompile Include="dummy.cpp" />
-    <ClCompile Include="hero.cpp" />
+    <ClCompile Include="Dummy.cpp" />
+    <ClCompile Include="Hero.cpp" />
+    <ClCompile Include="Inyo.cpp" />
+    <ClCompile Include="Key.cpp" />
     <ClCompile Include="play.cpp" />
-    <ClCompile Include="print.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Print.cpp" />
     <ClCompile Include="setting.cpp" />
-    <ClCompile Include="skill.cpp" />
+    <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="Team.cpp" />
     <ClCompile Include="ui.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="unit.cpp" />
+    <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

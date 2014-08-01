@@ -10,6 +10,20 @@ void GameRunLoop(void)
 		Print::get().printTop();
 		Print::get().printBottom();
 		MainMenu();
+		if (playerNum == 1)	//임시 설정
+		{
+			keySet[PLAYER_1].setZ(VKey(VK_Z));
+			keySet[PLAYER_1].setX(VKey(VK_X));
+			keySet[PLAYER_1].setC(VKey(VK_C));
+			keySet[PLAYER_1].setV(VKey(VK_V));
+		}
+		else
+		{
+			keySet[PLAYER_1].setZ(VKey(VK_I));
+			keySet[PLAYER_1].setX(VKey(VK_O));
+			keySet[PLAYER_1].setC(VKey(VK_P));
+			keySet[PLAYER_1].setV(VKey(VK_OEM_4));
+		}
 		GamePlayLoop();
 	}
 }
@@ -29,17 +43,25 @@ void GamePlayLoop(void)
 			Print::get().frameCheck();
 			Print::get().init();
 
-			player.at(0).moveAction();
-			player.at(0).showPos();
-			player.at(0).initDelay();
-			player.at(0).skillCheck();
-
 			MoveAi();
 
-			InputCommand();
-
-			if (!player.empty())
-				player.at(0).deadCheck();
+			if (playerNum > 0)
+				PlayerAction(PLAYER_1);
+			if (playerNum > 1)
+				PlayerAction(PLAYER_2);
 		}
 	}
+}
+
+void PlayerAction(int player_num)
+{
+	player[player_num].moveAction();
+	player[player_num].showPos();
+	player[player_num].initDelay();
+	player[player_num].skillCheck();
+
+	InputCommand(player_num);
+
+	if (!player.empty())
+		player[player_num].deadCheck();
 }

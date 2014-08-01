@@ -1,11 +1,5 @@
-// hero.h : Hero 클래스와 그 자식 클래스들을 선언합니다.
-//
-
-#ifndef __HERO_H
-#define __HERO_H
-
-#include "stdafx.h"
-
+#pragma once
+#include "Unit.h"
 class Hero : public Unit
 {
 public:
@@ -13,6 +7,7 @@ public:
 	Hero(POINT pc);
 	~Hero();
 
+	int havingHeart(void) { return heart; }
 	void showPos(void);
 	void hitCheck(int mob_num);
 	void deadCheck(void);
@@ -26,7 +21,6 @@ public:
 	void moveAction(void);
 	void skillOn(int skill_type);
 	void skillCheck(void);
-	int havingHeart(void);
 protected:
 	int delay;
 	int heart;
@@ -34,12 +28,3 @@ protected:
 	int max_mp;
 };
 
-class Inyo : public Hero
-{
-public:
-	Inyo();
-	Inyo(POINT pc);
-	~Inyo();
-};
-
-#endif

@@ -1,11 +1,4 @@
-// print.h : 화면 출력을 위한 print 클래스를 선언합니다.
-//
-
-#ifndef __PRINT_H
-#define __PRINT_H
-
-#include "stdafx.h"
-
+#pragma once
 extern std::vector<POINT> hitColor;
 extern std::vector<POINT> deathColor;
 extern std::vector<POINT> heroColor;
@@ -32,5 +25,3 @@ public:
 private:
 	Print();
 };
-
-#endif

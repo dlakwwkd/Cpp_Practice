@@ -10,13 +10,14 @@ int gameFrame;
 int gameMode;
 int heroType;
 int mobNumber;
+int playerNum;
+int lowSpecMode;
 bool gameRun;
 bool gamePlay;
-bool lowSpecMode;
-bool designateMode;
+bool designateMode[MAX_PLAYER_NUM];
 unsigned int gameTime;
 
-std::vector<Hero> player;
+std::map<int, Hero> player;
 std::vector<Unit> mob;
 std::queue<Skill> skill;
 std::queue<Dummy> dummy;
@@ -27,7 +28,8 @@ void InitPlay(void)
 	gameTime = (unsigned int)time(NULL);
 	gameStage = 1;
 	gameFrame = 0;
-	designateMode = OFF;
+	designateMode[0] = OFF;
+	designateMode[1] = OFF;
 
 	switch (gameLevel)
 	{
@@ -55,13 +57,15 @@ void InitPlay(void)
 	Print::get().printBottom();
 }
 
-void HeroCreate(void)
+void HeroCreate(int player_num)
 {
 	switch (heroType)
 	{
 	case HeroType(INYO):
 		Inyo inyo;
-		player.push_back(inyo);
+		player[player_num] = inyo;
+		player[player_num].setPlayerType(PlayerType(player_num));
+		player[player_num].setTeamType(TeamType(A));
 		break;
 	}
 }
@@ -79,6 +83,8 @@ void Respawne(void)
 				10 + gameStage * (2 + gameLevel), 5 + gameStage * gameLevel,	//체력, 마나
 				3 + gameStage * (1 + gameLevel/2));								//데미지
 			mob.push_back(m);
+			mob.front().setPlayerType(PlayerType(COMPUTER));
+			mob.front().setTeamType(TeamType(MOB));
 		}
 	}
 	else
@@ -89,6 +95,8 @@ void Respawne(void)
 				10 + gameStage * (1 + gameLevel), 5 + gameStage * gameLevel,
 				3 + gameStage * (2 + gameLevel/2));
 			mob.push_back(m);
+			mob.front().setPlayerType(PlayerType(COMPUTER));
+			mob.front().setTeamType(TeamType(MOB));
 		}
 	}
 
@@ -129,7 +137,7 @@ void MainMenu(void)
 					gamePlay = OFF;
 					return;
 				}
-				else if (menu == 1) SelectMode(input);
+				else if (menu == 1) PlayerMenu(input);
 				else if (menu == 3) OptionMenu();
 				else{
 					Gotoxy(0, PLAY_LINES);
@@ -224,6 +232,52 @@ void OptionMenu(void)
 	}
 	return;
 }
+void PlayerMenu(int input)
+{
+	int menu = 1;
+	while (1)
+	{
+		PlayerListPrint(menu);
+		input = _getch();
+
+		if (input == InputKey(SCAN_CODE))
+		{
+			input = _getch();
+			switch (input)
+			{
+			case InputKey(UP):
+				if (menu > 1) menu--;
+				else menu = playerListNum;
+				break;
+			case InputKey(DOWN):
+				if (menu < playerListNum) menu++;
+				else menu = 1;
+				break;
+			}
+		}
+		else
+		{
+			switch (input)
+			{
+			case 'z':
+			case InputKey(ENTER):
+				if (menu == playerListNum){
+					gamePlay = OFF;
+					return;
+				}
+				playerNum = menu;
+				SelectMode(input);
+				if (gamePlay) return;
+				break;
+			case 'x':
+			case InputKey(ESC):
+				gamePlay = OFF;
+				return;
+			}
+		}
+	}
+	return;
+}
 void SelectMode(int input)
 {
 	int menu = 1;
@@ -258,7 +312,9 @@ void SelectMode(int input)
 					return;
 				}
 				gameLevel = menu;
-				SelectHero();
+				SelectHero(PLAYER_1);
+				if (playerNum > 1)
+					SelectHero(PLAYER_2);
 				if (gamePlay) return;
 				break;
 			case 'x':
@@ -270,7 +326,7 @@ void SelectMode(int input)
 	}
 	return;
 }
-void SelectHero(void)
+void SelectHero(int player_num)
 {
 	int input;
 	int menu = 1;
@@ -305,7 +361,7 @@ void SelectHero(void)
 					return;
 				}
 				heroType = menu;
-				HeroCreate();
+				HeroCreate(player_num);
 				gamePlay = ON;
 				return;
 			case 'x':
@@ -377,7 +433,7 @@ void suspensionOption(void)
 	return;
 }
 
-void GameOver(void)
+void GameOver(int player_num)
 {
 	int input;
 	int menu = 1;
@@ -421,9 +477,9 @@ void GameOver(void)
 					gamePlay = OFF;
 					return;
 				}
-				if (player.at(0).havingHeart() > 0)
+				if (player[player_num].havingHeart() > 0)
 				{
-					player.at(0).revive();
+					player[player_num].revive();
 					gamePlay = ON;
 					return;
 				}

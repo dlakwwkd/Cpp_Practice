@@ -19,6 +19,8 @@ enum DefColor
 	STATUS_BAR = 249,
 };
 
+extern std::map<int, Key> keySet;
+
 void InitConsole(void);
 void Gotoxy(int x, int y);
 void Setcolor(int color);

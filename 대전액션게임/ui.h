@@ -6,10 +6,11 @@
 
 #include "stdafx.h"
 
-extern int mainMenuNum, modeMenuNum, heroListNum, gameOverListNum, gameOptionListNum,
+extern int mainMenuNum, playerListNum, modeMenuNum, heroListNum, gameOverListNum, gameOptionListNum,
 gameSpeedListNum, suspensionOptionListNum;
 
 void MainMenuPrint(int menu);
+void PlayerListPrint(int menu);
 void OptionMenuPrint(int menu, int menu2, int menu3);
 void ModeMenuPrint(int menu);
 void HeroListPrint(int menu);
