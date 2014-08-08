@@ -1,146 +1,127 @@
 #include "stdafx.h"
+#include "console.h"
+#include "setting.h"
+#include "Print.h"
 
-
-POINT_D Unit::public_move = { 0, 0 };
+POINT_D Unit::m_PublicMove = { 0, 0 };
 
 Unit::Unit() :
-owner(NULL), pos({ 0, 0 }), to_pos({ 0, 0 }), move({ 0, 0 }), move_power({ 0, 0 }),
-name("unit"), shape("><"), speed(10), hp(20), mp(10), damage(5), is_dead(false){}
+m_Owner(PlayerType(COMPUTER)), m_Pos({ 0, 0 }), m_ToPos({ 0, 0 }), m_Move({ 0, 0 }), m_MovePower({ 0, 0 }),
+m_Name("unit"), m_Shape("><"), m_Speed(10), m_Hp(20), m_Mp(10), m_Damage(5), m_IsDead(false){}
 
-Unit::Unit(std::string name, std::string shape, double speed, int hp, int mp, int damage) :
-owner(NULL), pos({ 0, 0 }), to_pos({ 0, 0 }), move({ 0, 0 }), move_power({ 0, 0 }),
-name(name), shape(shape), speed(speed), hp(hp), mp(mp), damage(damage), is_dead(false){}
+Unit::Unit(std::string m_Name, std::string m_Shape, double m_Speed, int m_Hp, int m_Mp, int m_Damage) :
+m_Owner(PlayerType(COMPUTER)), m_Pos({ 0, 0 }), m_ToPos({ 0, 0 }), m_Move({ 0, 0 }), m_MovePower({ 0, 0 }),
+m_Name(m_Name), m_Shape(m_Shape), m_Speed(m_Speed), m_Hp(m_Hp), m_Mp(m_Mp), m_Damage(m_Damage), m_IsDead(false){}
 
 Unit::Unit(const Unit &pc) :
-owner(NULL), pos(pc.pos), to_pos(pc.to_pos), move(pc.move), move_power(pc.move_power),
-name(pc.name), shape(pc.shape), speed(pc.speed), hp(pc.hp), mp(pc.mp), damage(pc.damage), is_dead(pc.is_dead){}
+m_Owner(PlayerType(COMPUTER)), m_Pos(pc.m_Pos), m_ToPos(pc.m_ToPos), m_Move(pc.m_Move), m_MovePower(pc.m_MovePower),
+m_Name(pc.m_Name), m_Shape(pc.m_Shape), m_Speed(pc.m_Speed), m_Hp(pc.m_Hp), m_Mp(pc.m_Mp), m_Damage(pc.m_Damage), m_IsDead(pc.m_IsDead){}
 
 Unit::~Unit()
 {
-	if (owner != NULL)
-		delete owner;
 }
 
-void Unit::setPlayerType(int type)
+void Unit::SetPlayerType(int type)
 {
-	if (owner == NULL)
-		owner = new Player;
-	owner->setPlayerType(type);
+	m_Owner = PlayerType(type);
 }
 
-void Unit::setTeamType(int type)
+int Unit::CheckPlayerType(void)
 {
-	if (owner == NULL)
-		owner = new Player;
-	owner->setTeamType(type);
+	return m_Owner;
 }
 
-int Unit::checkPlayerType(void)
+bool Unit::UseMp(int need_mp)
 {
-	if (owner == NULL)
-		return -1;
-	return owner->checkPlayerType();
-}
-
-int Unit::checkTeamType(void)
-{
-	if (owner == NULL)
-		return -1;
-	return owner->checkTeamType();
-}
-
-
-bool Unit::useMp(int need_mp)
-{
-	if (mp > need_mp)
+	if (m_Mp > need_mp)
 	{
-		mp -= need_mp;
+		m_Mp -= need_mp;
 		return true;
 	}
 	else
 	{
-		mp = 0;
+		m_Mp = 0;
 		return false;
 	}
 }
-int Unit::attack(void)
+int Unit::Attack(void)
 {
-	return damage;
+	return m_Damage;
 }
-void Unit::showPos(void)
+void Unit::ShowPos(void)
 {
-	if (is_dead) return;
-	Print::get().inText(pos.x, pos.y, shape);
+	if (m_IsDead) return;
+	Print::get().InText(m_Pos.x, m_Pos.y, m_Shape);
 }
-void Unit::ai(int reduce)
+void Unit::Ai(int reduce)
 {
 	if (rand() % (7 - gameLevel) == 0)
 	{
 		if (rand() % playerNum == 0)
-			to_pos = player[PLAYER_1].nowPos();
+			m_ToPos = hero[PLAYER_1].NowPos();
 		else
-			to_pos = player[PLAYER_2].nowPos();
+			m_ToPos = hero[PLAYER_2].NowPos();
 	}
 	else
 	{
-		to_pos.x = rand() % PLAY_COLS;
-		to_pos.y = rand() % PLAY_LINES;
+		m_ToPos.x = rand() % PLAY_COLS;
+		m_ToPos.y = rand() % PLAY_LINES;
 	}
-	move_power.x = (to_pos.x - pos.x) * speed / reduce;
-	move_power.y = (to_pos.y - pos.y) * speed / reduce;
+	m_MovePower.x = (m_ToPos.x - m_Pos.x) * m_Speed / reduce;
+	m_MovePower.y = (m_ToPos.y - m_Pos.y) * m_Speed / reduce;
 }
-void Unit::moveType(void)
+void Unit::MoveType(void)
 {
 	switch (gameMode)
 	{
 	case MobMoveForm(SCATTER):
-		moveAction(move);
+		MoveAction(m_Move);
 		break;
 	case MobMoveForm(MASS):
-		moveAction(public_move);
+		MoveAction(m_PublicMove);
 		break;
 	}
 }
-void Unit::moveAction(POINT_D &move)
+void Unit::MoveAction(POINT_D &move)
 {
-	if (move_power.x > 1 || move_power.x < -1) move_power.x -= move_power.x / 8;
-	else move_power.x = 0;
+	if (m_MovePower.x > 1 || m_MovePower.x < -1) m_MovePower.x -= m_MovePower.x * (deltaTime / 300);
+	else m_MovePower.x = 0;
 
-	if (move_power.y > 1 || move_power.y < -1) move_power.y -= move_power.y / 8;
-	else move_power.y = 0;
+	if (m_MovePower.y > 1 || m_MovePower.y < -1) m_MovePower.y -= m_MovePower.y * (deltaTime / 300);
+	else m_MovePower.y = 0;
 
-	if (move_power.x)
+	if (m_MovePower.x)
 	{
-		move.x += move_power.x / 6;
+		m_Move.x += m_MovePower.x * (deltaTime / 200);
 
-		if (move.x < 0)
-			move.x = 0;
-		else if (move.x > PLAY_COLS)
-			move.x = PLAY_COLS;
+		if (m_Move.x < 0)
+			m_Move.x = 0;
+		else if (m_Move.x > PLAY_COLS)
+			m_Move.x = PLAY_COLS;
 	}
-	if (move_power.y)
+	if (m_MovePower.y)
 	{
-		move.y += move_power.y / 6;
+		m_Move.y += m_MovePower.y * (deltaTime / 200);
 
-		if (move.y < 0)
-			move.y = 0;
-		else if (move.y > PLAY_LINES)
-			move.y = PLAY_LINES;
+		if (m_Move.y < 0)
+			m_Move.y = 0;
+		else if (m_Move.y > PLAY_LINES)
+			m_Move.y = PLAY_LINES;
 	}
-	pos = { (LONG)move.x, (LONG)move.y };
+	m_Pos = { (LONG)m_Move.x, (LONG)m_Move.y };
 }
-void Unit::beAttacked(int damage_earn, int attack_player)
+void Unit::BeAttacked(int damage_earn, int attack_player)
 {
-	if (hp > damage_earn) hp -= damage_earn;
-	else hp = 0;
-	hitColor.push_back({ pos.x, pos.y });
-	if (hp <= 0)
+	if (m_Hp > damage_earn) m_Hp -= damage_earn;
+	else m_Hp = 0;
+	hitColor.push_back({ m_Pos.x, m_Pos.y });
+	if (m_Hp <= 0)
 	{
-		deathColor.push_back({ pos.x, pos.y });
-		Print::get().inText(pos.x, pos.y, "00");
-		is_dead = true;
+		deathColor.push_back({ m_Pos.x, m_Pos.y });
+		Print::get().InText(m_Pos.x, m_Pos.y, "00");
+		m_IsDead = true;
 
-		if (attack_player != PlayerType(MOB))
-			player[attack_player].levelUp();
+		if (attack_player != PlayerType(COMPUTER))
+			hero[attack_player].LevelUp();
 	}
 }

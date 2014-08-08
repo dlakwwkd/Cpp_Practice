@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#include "command.h"
+#include "Key.h"
 
 Key::Key() : up(VK_UP), down(VK_DOWN), left(VK_LEFT), right(VK_RIGHT),
 z(Z_KEY), x(X_KEY), c(C_KEY), v(V_KEY){}
@@ -7,67 +9,67 @@ Key::~Key()
 {
 }
 
-void Key::setUp(int input)
+void Key::SetUp(int input)
 {
 	up = input;
 }
-void Key::setDown(int input)
+void Key::SetDown(int input)
 {
 	down = input;
 }
-void Key::setLeft(int input)
+void Key::SetLeft(int input)
 {
 	left = input;
 }
-void Key::setRight(int input)
+void Key::SetRight(int input)
 {
 	right = input;
 }
-void Key::setZ(int input)
+void Key::SetZ(int input)
 {
 	z = input;
 }
-void Key::setX(int input)
+void Key::SetX(int input)
 {
 	x = input;
 }
-void Key::setC(int input)
+void Key::SetC(int input)
 {
 	c = input;
 }
-void Key::setV(int input)
+void Key::SetV(int input)
 {
 	v = input;
 }
-int Key::getUp(void)
+int Key::GetUp(void)
 {
 	return up;
 }
-int Key::getDown(void)
+int Key::GetDown(void)
 {
 	return down;
 }
-int Key::getLeft(void)
+int Key::GetLeft(void)
 {
 	return left;
 }
-int Key::getRight(void)
+int Key::GetRight(void)
 {
 	return 	right;
 }
-int Key::getZ(void)
+int Key::GetZ(void)
 {
 	return z;
 }
-int Key::getX(void)
+int Key::GetX(void)
 {
 	return 	x;
 }
-int Key::getC(void)
+int Key::GetC(void)
 {
 	return 	c;
 }
-int Key::getV(void)
+int Key::GetV(void)
 {
 	return 	v;
 }

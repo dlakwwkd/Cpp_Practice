@@ -1,93 +1,75 @@
 #include "stdafx.h"
+#include "console.h"
+#include "setting.h"
+#include "Print.h"
 
-
-Skill::Skill() : owner(NULL), name("skill"), rect({ 0, 0, 0, 0 }), damage(0), need_mana(0), cooldown(1){}
+Skill::Skill() : m_Owner(PlayerType(COMPUTER)), m_Name("skill"), m_Rect({ 0, 0, 0, 0 }), m_Damage(0), m_NeedMana(0), m_Cooldown(1){}
 
 Skill::Skill(std::string nm, RECT rt, int dm, int mana, int cool) :
-owner(NULL), name(nm), rect(rt), damage(dm), need_mana(mana), cooldown(cool){}
+m_Owner(PlayerType(COMPUTER)), m_Name(nm), m_Rect(rt), m_Damage(dm), m_NeedMana(mana), m_Cooldown(cool){}
 
 Skill::Skill(const Skill &pc) :
-owner(NULL), name(pc.name), rect(pc.rect), damage(pc.damage), need_mana(pc.need_mana), cooldown(pc.cooldown){}
+m_Owner(PlayerType(COMPUTER)), m_Name(pc.m_Name), m_Rect(pc.m_Rect), m_Damage(pc.m_Damage), m_NeedMana(pc.m_NeedMana), m_Cooldown(pc.m_Cooldown){}
 
 Skill::~Skill()
 {
-	if (owner != NULL)
-		delete owner;
 }
 
-void Skill::setPlayerType(int type)
+void Skill::SetPlayerType(int type)
 {
-	if (owner == NULL)
-		owner = new Player;
-	owner->setPlayerType(type);
+	m_Owner = PlayerType(type);
 }
 
-void Skill::setTeamType(int type)
+int Skill::CheckPlayerType(void)
 {
-	if (owner == NULL)
-		owner = new Player;
-	owner->setTeamType(type);
+	return m_Owner;
 }
 
-int Skill::checkPlayerType(void)
+void Skill::SkillEffect(int effect_color)
 {
-	if (owner == NULL)
-		return -1;
-	return owner->checkPlayerType();
-}
+	m_Cooldown--;
 
-int Skill::checkTeamType(void)
-{
-	if (owner == NULL)
-		return -1;
-	return owner->checkTeamType();
-}
-
-void Skill::skillEffect(int effect_color)
-{
-	cooldown--;
-
-	if (rect.top < 1)
+	if (m_Rect.top < 1)
 	{
-		rect.bottom += 1 - rect.top;
-		rect.top += 1 - rect.top;
+		m_Rect.bottom += 1 - m_Rect.top;
+		m_Rect.top += 1 - m_Rect.top;
 	}
-	if (rect.bottom > PLAY_LINES + 1)
+	if (m_Rect.bottom > PLAY_LINES + 1)
 	{
-		rect.top += (PLAY_LINES + 1) - rect.bottom;
-		rect.bottom += (PLAY_LINES + 1) - rect.bottom;
+		m_Rect.top += (PLAY_LINES + 1) - m_Rect.bottom;
+		m_Rect.bottom += (PLAY_LINES + 1) - m_Rect.bottom;
 	}
-	if (rect.left < 0)
+	if (m_Rect.left < 0)
 	{
-		rect.right += 0 - rect.left;
-		rect.left += 0 - rect.left;
+		m_Rect.right += 0 - m_Rect.left;
+		m_Rect.left += 0 - m_Rect.left;
 	}
-	if (rect.right > PLAY_COLS + 1)
+	if (m_Rect.right > PLAY_COLS + 1)
 	{
-		rect.left += (PLAY_COLS + 1) - rect.right;
-		rect.right += (PLAY_COLS + 1) - rect.right;
+		m_Rect.left += (PLAY_COLS + 1) - m_Rect.right;
+		m_Rect.right += (PLAY_COLS + 1) - m_Rect.right;
 	}
 
-	if (player[this->checkPlayerType()].useMp(need_mana))
+	if (hero[this->CheckPlayerType()].UseMp(m_NeedMana))
 	{
 		int i, j;
-		for (j = rect.top; j <= rect.bottom; j++)
+		for (j = m_Rect.top; j <= m_Rect.bottom; j++)
 		{
-			if (j == rect.top || j == rect.bottom)
+			if (j == m_Rect.top || j == m_Rect.bottom)
 			{
-				Gotoxy(rect.left + 3, j);
+				Gotoxy(m_Rect.left + 3, j);
 				Setcolor(effect_color);
-				for (i = rect.left + 3; i <= rect.right - 3; i++)
+				for (i = m_Rect.left + 3; i <= m_Rect.right - 3; i++)
 				{
 					_putch('#');
 				}
 				Setcolor(DefColor(SCREEN));
 			}
-			else if (j == rect.top + 1 || j == rect.bottom - 1)
+			else if (j == m_Rect.top + 1 || j == m_Rect.bottom - 1)
 			{
-				Gotoxy(rect.left + 1, j);
+				Gotoxy(m_Rect.left + 1, j);
 				Setcolor(effect_color);
-				for (i = rect.left + 1; i <= rect.right - 1; i++)
+				for (i = m_Rect.left + 1; i <= m_Rect.right - 1; i++)
 				{
 					_putch('#');
 				}
@@ -95,9 +77,9 @@ void Skill::skillEffect(int effect_color)
 			}
 			else
 			{
-				Gotoxy(rect.left, j);
+				Gotoxy(m_Rect.left, j);
 				Setcolor(effect_color);
-				for (i = rect.left; i <= rect.right; i++)
+				for (i = m_Rect.left; i <= m_Rect.right; i++)
 				{
 					_putch('#');
 				}
@@ -109,67 +91,66 @@ void Skill::skillEffect(int effect_color)
 		{
 			for (unsigned int i = 0; i < mob.size(); i++)
 			{
-				if (PtInRect(&rect, mob.at(i).nowPos()))
-					mob.at(i).beAttacked(damage, this->checkPlayerType());
+				if (PtInRect(&m_Rect, mob.at(i).NowPos()))
+					mob.at(i).BeAttacked(m_Damage, this->CheckPlayerType());
 			}
 		}
 		//임시 구현
-		if (this->checkPlayerType() == PLAYER_1)
+		if (this->CheckPlayerType() == PLAYER_1)
 		{
-			if (PtInRect(&rect, player[PLAYER_2].nowPos()))
+			if (PtInRect(&m_Rect, hero[PLAYER_2].NowPos()))
 			{
-				player[PLAYER_2].beAttacked(damage, this->checkPlayerType());
-				Print::get().printBottom();
+				hero[PLAYER_2].BeAttacked(m_Damage, this->CheckPlayerType());
+				Print::get().PrintBottom();
 			}
 			else
 				Sleep(gameSpeed * 5 / (1 + lowSpecMode));
 		}
-		else if (this->checkPlayerType() == PLAYER_2)
+		else if (this->CheckPlayerType() == PLAYER_2)
 		{
-			if (PtInRect(&rect, player[PLAYER_1].nowPos()))
+			if (PtInRect(&m_Rect, hero[PLAYER_1].NowPos()))
 			{
-				player[PLAYER_1].beAttacked(damage, this->checkPlayerType());
-				Print::get().printBottom();
+				hero[PLAYER_1].BeAttacked(m_Damage, this->CheckPlayerType());
+				Print::get().PrintBottom();
 			}
 			else
 				Sleep(gameSpeed * 5 / (1 + lowSpecMode));
 		}
 
-		rect.top -= cooldown;
-		rect.bottom += cooldown;
-		rect.left -= 2 * cooldown;
-		rect.right += 2 * cooldown;
+		m_Rect.top -= m_Cooldown;
+		m_Rect.bottom += m_Cooldown;
+		m_Rect.left -= 2 * m_Cooldown;
+		m_Rect.right += 2 * m_Cooldown;
 	}
 }
-void Skill::skillUse(void)
+void Skill::SkillUse(void)
 {
-	if (name == "Z")
-		skillEffect(SkillEffect(SKY_BLUE));
-	else if (name == "C")
+	if (m_Name == "Z")
+		SkillEffect(SkillEffectColor(SKY_BLUE));
+	else if (m_Name == "C")
 	{
-		cooldown--;
+		m_Cooldown--;
 
 		Skill c_dummy("C_dummy",
-		{ dummy.back().nowPos().x - 6, dummy.back().nowPos().y - 2,
-		dummy.back().nowPos().x + 7, dummy.back().nowPos().y + 4 },
+		{ dummy.back().NowPos().x - 6, dummy.back().NowPos().y - 2,
+		dummy.back().NowPos().x + 7, dummy.back().NowPos().y + 4 },
 		20, 3, 2);
 		skill.push(c_dummy);
-		skill.back().setPlayerType(this->checkPlayerType());
-		skill.back().setTeamType(this->checkTeamType());
+		skill.back().SetPlayerType(this->CheckPlayerType());
 
-		if (cooldown < 1){
+		if (m_Cooldown < 1){
 			while (!dummy.empty())
 			{
 				dummy.pop();
 			}
 		}
 	}
-	else if (name == "C_dummy")
+	else if (m_Name == "C_dummy")
 	{
-		skillEffect(SkillEffect(RED_YELLO));
+		SkillEffect(SkillEffectColor(RED_YELLO));
 	}
 
-	if (cooldown < 1)
+	if (m_Cooldown < 1)
 	{
 		if (!skill.empty())
 			skill.pop();

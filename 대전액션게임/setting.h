@@ -5,6 +5,8 @@
 #define __SETTING_H
 
 #include "stdafx.h"
+#include "Dummy.h"
+#include "Skill.h"
 
 enum OnOff
 {
@@ -40,6 +42,7 @@ enum GameSpeed
 };
 
 #define MAX_PLAYER_NUM 2
+#define MAX_MOB_NUM 1000
 
 extern int gameSpeed;
 extern int gameStage;
@@ -54,8 +57,9 @@ extern bool gameRun;
 extern bool gamePlay;
 extern bool designateMode[MAX_PLAYER_NUM];
 extern unsigned int gameTime;
+extern double deltaTime;
 
-extern std::map<int, Hero> player;
+extern std::map<int, Hero> hero;
 extern std::vector<Unit> mob;
 extern std::queue<Skill> skill;
 extern std::queue<Dummy> dummy;
@@ -69,7 +73,7 @@ void OptionMenu(void);
 void PlayerMenu(int input);
 void SelectMode(int input);
 void SelectHero(int player_num);
-void suspensionOption(void);
+void SuspensionOption(void);
 void GameOver(int player_num);
 
 #endif

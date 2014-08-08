@@ -2,6 +2,10 @@
 //
 
 #include "stdafx.h"
+#include "console.h"
+#include "setting.h"
+#include "play.h"
+#include "ui.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {

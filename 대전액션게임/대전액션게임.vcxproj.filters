@@ -16,16 +16,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Player.h">
-      <Filter>클래스</Filter>
-    </ClInclude>
     <ClInclude Include="Print.h">
       <Filter>클래스</Filter>
     </ClInclude>
     <ClInclude Include="Skill.h">
-      <Filter>클래스</Filter>
-    </ClInclude>
-    <ClInclude Include="Team.h">
       <Filter>클래스</Filter>
     </ClInclude>
     <ClInclude Include="Hero.h">
@@ -96,13 +90,7 @@
     <ClCompile Include="Print.cpp">
       <Filter>클래스</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>클래스</Filter>
-    </ClCompile>
     <ClCompile Include="Skill.cpp">
-      <Filter>클래스</Filter>
-    </ClCompile>
-    <ClCompile Include="Team.cpp">
       <Filter>클래스</Filter>
     </ClCompile>
     <ClCompile Include="Hero.cpp">

@@ -2,6 +2,10 @@
 //
 
 #include "stdafx.h"
+#include "command.h"
+#include "console.h"
+#include "setting.h"
+#include "Key.h"
 
 void InputCommand(int player_num)
 {
@@ -12,29 +16,29 @@ void InputCommand(int player_num)
 
 	if (designateMode[player_num - 1])
 	{
-		dummy.front().showPos();
-		dummy.front().moveAction();
+		dummy.front().ShowPos();
+		dummy.front().MoveAction();
 
-		if (GetAsyncKeyState(keySet[player_num].getUp()) & 0x8000)
-			dummy.front().moveInput(InputKey(UP));
-		if (GetAsyncKeyState(keySet[player_num].getDown()) & 0x8000)
-			dummy.front().moveInput(InputKey(DOWN));
-		if (GetAsyncKeyState(keySet[player_num].getLeft()) & 0x8000)
-			dummy.front().moveInput(InputKey(LEFT));
-		if (GetAsyncKeyState(keySet[player_num].getRight()) & 0x8000)
-			dummy.front().moveInput(InputKey(RIGHT));
+		if (GetAsyncKeyState(keySet[player_num].GetUp()) & 0x8000)
+			dummy.front().MoveInput(InputKey(UP));
+		if (GetAsyncKeyState(keySet[player_num].GetDown()) & 0x8000)
+			dummy.front().MoveInput(InputKey(DOWN));
+		if (GetAsyncKeyState(keySet[player_num].GetLeft()) & 0x8000)
+			dummy.front().MoveInput(InputKey(LEFT));
+		if (GetAsyncKeyState(keySet[player_num].GetRight()) & 0x8000)
+			dummy.front().MoveInput(InputKey(RIGHT));
 
-		if (GetAsyncKeyState(keySet[player_num].getZ()) & 0x8000)
+		if (GetAsyncKeyState(keySet[player_num].GetZ()) & 0x8000)
 		{
 			if (inputZ[player_num - 1] == 0)
 			{
-				player[player_num].skillOn('z');
+				hero[player_num].SkillOn('z');
 				inputZ[player_num - 1] = 1;
 			}
 		}
 		else inputZ[player_num - 1] = 0;
 
-		if ((GetAsyncKeyState(keySet[player_num].getX()) & 0x8000))
+		if ((GetAsyncKeyState(keySet[player_num].GetX()) & 0x8000))
 		{
 			if (inputX[player_num - 1] == 0)
 			{
@@ -45,8 +49,8 @@ void InputCommand(int player_num)
 		}
 		else inputX[player_num - 1] = 0;
 
-		if (GetAsyncKeyState(keySet[player_num].getC()) & 0x8000)
-			player[player_num].skillOn('c');
+		if (GetAsyncKeyState(keySet[player_num].GetC()) & 0x8000)
+			hero[player_num].SkillOn('c');
 
 		if (GetAsyncKeyState(VK_RETURN) & 0x8000)
 		{
@@ -72,49 +76,49 @@ void InputCommand(int player_num)
 	else
 	{
 		if (!dummy.empty())
-			dummy.back().moveAction();
+			dummy.back().MoveAction();
 
-		if (GetAsyncKeyState(keySet[player_num].getUp()) & 0x8000)
-			player[player_num].moveInput(InputKey(UP));
-		if (GetAsyncKeyState(keySet[player_num].getDown()) & 0x8000)
-			player[player_num].moveInput(InputKey(DOWN));
-		if (GetAsyncKeyState(keySet[player_num].getLeft()) & 0x8000)
-			player[player_num].moveInput(InputKey(LEFT));
-		if (GetAsyncKeyState(keySet[player_num].getRight()) & 0x8000)
-			player[player_num].moveInput(InputKey(RIGHT));
+		if (GetAsyncKeyState(keySet[player_num].GetUp()) & 0x8000)
+			hero[player_num].MoveInput(InputKey(UP));
+		if (GetAsyncKeyState(keySet[player_num].GetDown()) & 0x8000)
+			hero[player_num].MoveInput(InputKey(DOWN));
+		if (GetAsyncKeyState(keySet[player_num].GetLeft()) & 0x8000)
+			hero[player_num].MoveInput(InputKey(LEFT));
+		if (GetAsyncKeyState(keySet[player_num].GetRight()) & 0x8000)
+			hero[player_num].MoveInput(InputKey(RIGHT));
 
-		if (GetAsyncKeyState(keySet[player_num].getZ()) & 0x8000)
+		if (GetAsyncKeyState(keySet[player_num].GetZ()) & 0x8000)
 		{
 			if (inputZ[player_num - 1] == 0)
 			{
 				if (dummy.empty())
-					player[player_num].skillOn('z');
+					hero[player_num].SkillOn('z');
 				inputZ[player_num - 1] = 1;
 			}
 		}
 		else inputZ[player_num - 1] = 0;
 
-		if ((GetAsyncKeyState(keySet[player_num].getX()) & 0x8000))
+		if ((GetAsyncKeyState(keySet[player_num].GetX()) & 0x8000))
 		{
 			if (inputX[player_num - 1] == 0)
 			{
 				if (dummy.empty())
-					player[player_num].skillOn('x');
+					hero[player_num].SkillOn('x');
 				inputX[player_num - 1] = 1;
 			}
 		}
 		else inputX[player_num - 1] = 0;
 
-		if (GetAsyncKeyState(keySet[player_num].getC()) & 0x8000)
+		if (GetAsyncKeyState(keySet[player_num].GetC()) & 0x8000)
 		{
 			if (dummy.empty())
-				player[player_num].skillOn('c');
+				hero[player_num].SkillOn('c');
 		}
 
-		if (GetAsyncKeyState(keySet[player_num].getV()) & 0x8000)
+		if (GetAsyncKeyState(keySet[player_num].GetV()) & 0x8000)
 		{
 			if (dummy.empty())
-				player[player_num].skillOn('v');
+				hero[player_num].SkillOn('v');
 		}
 
 		if (GetAsyncKeyState(VK_RETURN) & 0x8000)
@@ -137,7 +141,7 @@ void InputCommand(int player_num)
 		{
 			if (inputEsc == 0)
 			{
-				suspensionOption();
+				SuspensionOption();
 				inputEsc = 1;
 				inputEnter = 1;
 			}

@@ -7,7 +7,7 @@
 #include "stdafx.h"
 
 extern int mainMenuNum, playerListNum, modeMenuNum, heroListNum, gameOverListNum, gameOptionListNum,
-gameSpeedListNum, suspensionOptionListNum;
+gamem_SpeedListNum, suspensionOptionListNum;
 
 void MainMenuPrint(int menu);
 void PlayerListPrint(int menu);

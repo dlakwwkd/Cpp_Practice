@@ -1,4 +1,5 @@
 #pragma once
+#include "console.h"
 extern std::vector<POINT> hitColor;
 extern std::vector<POINT> deathColor;
 extern std::vector<POINT> heroColor;
@@ -12,16 +13,16 @@ public:
 		static Print instance;
 		return instance;
 	}
-	char screenBuffer[PLAY_LINES + 1][CONSOLE_COLS + 1];
+	char m_ScreenBuffer[PLAY_LINES + 1][CONSOLE_COLS + 1];
 
-	void inText(int x, int y, std::string text);
-	void init(void);
-	void printText(void);
-	void printColor(void);
-	void printTop(void);
-	void printBottom(void);
+	void InText(int x, int y, std::string text);
+	void Init(void);
+	void PrintText(void);
+	void PrintColor(void);
+	void PrintTop(void);
+	void PrintBottom(void);
 
-	void frameCheck(void);
+	void FrameCheck(void);
 private:
 	Print();
 };

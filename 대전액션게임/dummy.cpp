@@ -1,35 +1,36 @@
 #include "stdafx.h"
-
+#include "setting.h"
+#include "Print.h"
 
 Dummy::Dummy() : Hero()
 {
-	name = "dumy";
-	shape = "+";
-	speed = 5;
+	m_Name = "dumy";
+	m_Shape = "+";
+	m_Speed = 5;
 }
 Dummy::Dummy(POINT pc) : Hero()
 {
-	pos = pc;
-	move.x = (LONG)pos.x;
-	move.y = (LONG)pos.y;
+	m_Pos = pc;
+	m_Move.x = (LONG)m_Pos.x;
+	m_Move.y = (LONG)m_Pos.y;
 
-	name = "dumy";
-	shape = "+";
-	speed = 5;
+	m_Name = "dumy";
+	m_Shape = "+";
+	m_Speed = 5;
 }
 Dummy::~Dummy(){}
 
-void Dummy::showPos(void)
+void Dummy::ShowPos(void)
 {
-	if (is_dead) return;
+	if (m_IsDead) return;
 	if (!lowSpecMode)
-		scopeColor.push_back({ pos.x, pos.y });
-	Print::get().inText(pos.x, pos.y, shape);
+		scopeColor.push_back({ m_Pos.x, m_Pos.y });
+	Print::get().InText(m_Pos.x, m_Pos.y, m_Shape);
 }
-void Dummy::ai(int reduce)
+void Dummy::Ai(int reduce)
 {
-	to_pos = dummy.front().pos;
+	m_ToPos = dummy.front().m_Pos;
 
-	move_power.x = (to_pos.x - pos.x) * speed / reduce;
-	move_power.y = (to_pos.y - pos.y) * speed / reduce;
+	m_MovePower.x = (m_ToPos.x - m_Pos.x) * m_Speed / reduce;
+	m_MovePower.y = (m_ToPos.y - m_Pos.y) * m_Speed / reduce;
 }

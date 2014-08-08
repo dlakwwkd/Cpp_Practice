@@ -2,6 +2,12 @@
 //
 
 #include "stdafx.h"
+#include "command.h"
+#include "console.h"
+#include "setting.h"
+#include "Print.h"
+#include "Inyo.h"
+#include "ui.h"
 
 int gameSpeed;
 int gameStage;
@@ -16,8 +22,9 @@ bool gameRun;
 bool gamePlay;
 bool designateMode[MAX_PLAYER_NUM];
 unsigned int gameTime;
+double deltaTime;
 
-std::map<int, Hero> player;
+std::map<int, Hero> hero;
 std::vector<Unit> mob;
 std::queue<Skill> skill;
 std::queue<Dummy> dummy;
@@ -52,9 +59,10 @@ void InitPlay(void)
 		mobNumber = 50;
 		break;
 	}
+	mob.reserve(MAX_MOB_NUM);
 	Respawne();
-	Print::get().printTop();
-	Print::get().printBottom();
+	Print::get().PrintTop();
+	Print::get().PrintBottom();
 }
 
 void HeroCreate(int player_num)
@@ -63,9 +71,8 @@ void HeroCreate(int player_num)
 	{
 	case HeroType(INYO):
 		Inyo inyo;
-		player[player_num] = inyo;
-		player[player_num].setPlayerType(PlayerType(player_num));
-		player[player_num].setTeamType(TeamType(A));
+		hero[player_num] = inyo;
+		hero[player_num].SetPlayerType(PlayerType(player_num));
 		break;
 	}
 }
@@ -83,8 +90,6 @@ void Respawne(void)
 				10 + gameStage * (2 + gameLevel), 5 + gameStage * gameLevel,	//체력, 마나
 				3 + gameStage * (1 + gameLevel/2));								//데미지
 			mob.push_back(m);
-			mob.front().setPlayerType(PlayerType(COMPUTER));
-			mob.front().setTeamType(TeamType(MOB));
 		}
 	}
 	else
@@ -95,8 +100,6 @@ void Respawne(void)
 				10 + gameStage * (1 + gameLevel), 5 + gameStage * gameLevel,
 				3 + gameStage * (2 + gameLevel/2));
 			mob.push_back(m);
-			mob.front().setPlayerType(PlayerType(COMPUTER));
-			mob.front().setTeamType(TeamType(MOB));
 		}
 	}
 
@@ -183,7 +186,7 @@ void OptionMenu(void)
 				if (menu == 1)
 				{
 					if (menu2 > 1) menu2--;
-					else menu2 = gameSpeedListNum;
+					else menu2 = gamem_SpeedListNum;
 				}
 				else if (menu == 2)
 				{
@@ -194,7 +197,7 @@ void OptionMenu(void)
 			case InputKey(RIGHT):
 				if (menu == 1)
 				{
-					if (menu2 < gameSpeedListNum) menu2++;
+					if (menu2 < gamem_SpeedListNum) menu2++;
 					else menu2 = 1;
 				}
 				else if (menu == 2)
@@ -215,7 +218,7 @@ void OptionMenu(void)
 					return;
 				else if (menu == 1)
 				{
-					if (menu2 < gameSpeedListNum) menu2++;
+					if (menu2 < gamem_SpeedListNum) menu2++;
 					else menu2 = 1;
 				}
 				else if (menu == 2)
@@ -373,7 +376,7 @@ void SelectHero(int player_num)
 	}
 	return;
 }
-void suspensionOption(void)
+void SuspensionOption(void)
 {
 	int input;
 	int menu = 1;
@@ -409,7 +412,7 @@ void suspensionOption(void)
 			case InputKey(ENTER):
 				if (menu == suspensionOptionListNum)
 				{
-					if (!player.empty()) player.clear();
+					if (!hero.empty()) hero.clear();
 					if (!mob.empty()) mob.clear();
 					while (!dummy.empty()) dummy.pop();
 					while (!skill.empty()) skill.pop();
@@ -469,7 +472,7 @@ void GameOver(int player_num)
 			case InputKey(ENTER):
 				if (menu == gameOverListNum)
 				{
-					if (!player.empty()) player.clear();
+					if (!hero.empty()) hero.clear();
 					if (!mob.empty()) mob.clear();
 					while (!dummy.empty()) dummy.pop();
 					while (!skill.empty()) skill.pop();
@@ -477,9 +480,9 @@ void GameOver(int player_num)
 					gamePlay = OFF;
 					return;
 				}
-				if (player[player_num].havingHeart() > 0)
+				if (hero[player_num].HavingHeart() > 0)
 				{
-					player[player_num].revive();
+					hero[player_num].Revive();
 					gamePlay = ON;
 					return;
 				}

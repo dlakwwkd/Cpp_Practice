@@ -2,27 +2,36 @@
 //
 
 #include "stdafx.h"
+#include "command.h"
+#include "console.h"
+#include "setting.h"
+#include "Print.h"
+#include "play.h"
+#include "Key.h"
+#include "ai.h"
+#pragma comment(lib, "winmm.lib")
+
 
 void GameRunLoop(void)
 {
 	while (gameRun)
 	{
-		Print::get().printTop();
-		Print::get().printBottom();
+		Print::get().PrintTop();
+		Print::get().PrintBottom();
 		MainMenu();
 		if (playerNum == 1)	//임시 설정
 		{
-			keySet[PLAYER_1].setZ(VKey(VK_Z));
-			keySet[PLAYER_1].setX(VKey(VK_X));
-			keySet[PLAYER_1].setC(VKey(VK_C));
-			keySet[PLAYER_1].setV(VKey(VK_V));
+			keySet[PLAYER_1].SetZ(VKey(VK_Z));
+			keySet[PLAYER_1].SetX(VKey(VK_X));
+			keySet[PLAYER_1].SetC(VKey(VK_C));
+			keySet[PLAYER_1].SetV(VKey(VK_V));
 		}
 		else
 		{
-			keySet[PLAYER_1].setZ(VKey(VK_I));
-			keySet[PLAYER_1].setX(VKey(VK_O));
-			keySet[PLAYER_1].setC(VKey(VK_P));
-			keySet[PLAYER_1].setV(VKey(VK_OEM_4));
+			keySet[PLAYER_1].SetZ(VKey(VK_I));
+			keySet[PLAYER_1].SetX(VKey(VK_O));
+			keySet[PLAYER_1].SetC(VKey(VK_P));
+			keySet[PLAYER_1].SetV(VKey(VK_OEM_4));
 		}
 		GamePlayLoop();
 	}
@@ -31,37 +40,36 @@ void GameRunLoop(void)
 void GamePlayLoop(void)
 {
 	InitPlay();
-	clock_t start = clock();
+	DWORD prevTime = timeGetTime();
 	while (gamePlay)
 	{
-		clock_t delay = CLOCKS_PER_SEC / (10 * gameSpeed);
-		if (clock() - start > delay)
-		{
-			start = clock();
-			Print::get().printText();
-			Print::get().printColor();
-			Print::get().frameCheck();
-			Print::get().init();
+		DWORD nowTime = timeGetTime();
+		deltaTime = nowTime - prevTime;
+		prevTime = nowTime;
 
-			MoveAi();
+		Print::get().PrintText();
+		Print::get().PrintColor();
+		Print::get().FrameCheck();
+		Print::get().Init();
 
-			if (playerNum > 0)
-				PlayerAction(PLAYER_1);
-			if (playerNum > 1)
-				PlayerAction(PLAYER_2);
-		}
+		MoveAi();
+
+		if (playerNum > 0)
+			PlayerAction(PLAYER_1);
+		if (playerNum > 1)
+			PlayerAction(PLAYER_2);
 	}
 }
 
 void PlayerAction(int player_num)
 {
-	player[player_num].moveAction();
-	player[player_num].showPos();
-	player[player_num].initDelay();
-	player[player_num].skillCheck();
+	hero[player_num].MoveAction();
+	hero[player_num].ShowPos();
+	hero[player_num].InitDelay();
+	hero[player_num].SkillCheck();
 
 	InputCommand(player_num);
 
-	if (!player.empty())
-		player[player_num].deadCheck();
+	if (!hero.empty())
+		hero[player_num].DeadCheck();
 }

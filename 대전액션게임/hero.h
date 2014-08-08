@@ -7,24 +7,24 @@ public:
 	Hero(POINT pc);
 	~Hero();
 
-	int havingHeart(void) { return heart; }
-	void showPos(void);
-	void hitCheck(int mob_num);
-	void deadCheck(void);
-	void revive(void);
-	void hpStatus(void);
-	void mpStatus(void);
-	void levelUp(void);
-	void initDelay(void);
-	void addDelay(void);
-	void moveInput(int input);
-	void moveAction(void);
-	void skillOn(int skill_type);
-	void skillCheck(void);
+	int HavingHeart(void) { return m_Heart; }
+	void ShowPos(void);
+	void HitCheck(int mob_num);
+	void DeadCheck(void);
+	void Revive(void);
+	void HpStatus(void);
+	void MpStatus(void);
+	void LevelUp(void);
+	void InitDelay(void);
+	void AddDelay(void);
+	void MoveInput(int input);
+	void MoveAction(void);
+	void SkillOn(int skill_type);
+	void SkillCheck(void);
 protected:
-	int delay;
-	int heart;
-	int max_hp;
-	int max_mp;
+	int m_Delay;
+	int m_Heart;
+	int m_MaxHp;
+	int m_MaxMp;
 };
 

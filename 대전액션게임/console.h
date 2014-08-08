@@ -6,6 +6,8 @@
 
 #include "stdafx.h"
 
+class Key;
+
 #define CONSOLE_LINES 44
 #define CONSOLE_COLS 135
 #define PLAY_LINES (CONSOLE_LINES-6)

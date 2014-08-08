@@ -2,6 +2,8 @@
 //
 
 #include "stdafx.h"
+#include "setting.h"
+#include "ai.h"
 
 void MoveAi(void)
 {
@@ -14,7 +16,7 @@ void MoveAi(void)
 		break;
 	case MobMoveForm(MASS):
 		i = rand() % mob.size();
-		mob.at(i).ai(30);
+		mob.at(i).Ai(30);
 		break;
 	}
 
@@ -24,21 +26,21 @@ void MoveAi(void)
 		{
 		case MobMoveForm(SCATTER):
 			if (rand() % 20 - gameLevel*3 == 0)
-				mob.at(i).ai(20);
-			mob.at(i).moveType();
+				mob.at(i).Ai(20);
+			mob.at(i).MoveType();
 			break;
 		case MobMoveForm(MASS):
 			if (rand() % 10 - gameLevel/2 == 0)
-				mob.at(i).moveType();
+				mob.at(i).MoveType();
 			break;
 		}
-		mob.at(i).showPos();
+		mob.at(i).ShowPos();
 
 		if (playerNum > 0)
-			player[PLAYER_1].hitCheck(i);
+			hero[PLAYER_1].HitCheck(i);
 		if (playerNum > 1)
-			player[PLAYER_2].hitCheck(i);
+			hero[PLAYER_2].HitCheck(i);
 
-		if (mob.at(i).deadCheck()) mob.erase(mob.begin() + i);
+		if (mob.at(i).DeadCheck()) mob.erase(mob.begin() + i);
 	}
 }

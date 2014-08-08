@@ -7,6 +7,6 @@ public:
 	Dummy(POINT pc);
 	~Dummy();
 
-	void showPos(void);
-	void ai(int reduce);
+	void ShowPos(void);
+	void Ai(int reduce);
 };

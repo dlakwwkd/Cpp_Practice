@@ -5,22 +5,22 @@ public:
 	Key();
 	~Key();
 
-	void setUp(int input);
-	void setDown(int input);
-	void setLeft(int input);
-	void setRight(int input);
-	void setZ(int input);
-	void setX(int input);
-	void setC(int input);
-	void setV(int input);
-	int getUp(void);
-	int getDown(void);
-	int getLeft(void);
-	int getRight(void);
-	int getZ(void);
-	int getX(void);
-	int getC(void);
-	int getV(void);
+	void SetUp(int input);
+	void SetDown(int input);
+	void SetLeft(int input);
+	void SetRight(int input);
+	void SetZ(int input);
+	void SetX(int input);
+	void SetC(int input);
+	void SetV(int input);
+	int GetUp(void);
+	int GetDown(void);
+	int GetLeft(void);
+	int GetRight(void);
+	int GetZ(void);
+	int GetX(void);
+	int GetC(void);
+	int GetV(void);
 private:
 	int up;
 	int down;

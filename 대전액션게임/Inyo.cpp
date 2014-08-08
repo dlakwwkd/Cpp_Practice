@@ -1,29 +1,29 @@
 #include "stdafx.h"
-
+#include "Inyo.h"
 
 Inyo::Inyo() : Hero()
 {
-	name = "Inyo";
-	shape = "[]";
-	speed = 5;
-	hp = 100;
-	mp = 100;
-	damage = 20;
-	max_hp = hp;
-	max_mp = mp;
+	m_Name = "Inyo";
+	m_Shape = "[]";
+	m_Speed = 5;
+	m_Hp = 100;
+	m_Mp = 100;
+	m_Damage = 20;
+	m_MaxHp = m_Hp;
+	m_MaxMp = m_Mp;
 }
 Inyo::Inyo(POINT pc) : Hero()
 {
-	pos = pc;
-	move.x = (LONG)pos.x;
-	move.y = (LONG)pos.y;
-	name = "Inyo";
-	shape = "[]";
-	speed = 5;
-	hp = 100;
-	mp = 100;
-	damage = 20;
-	max_hp = hp;
-	max_mp = mp;
+	m_Pos = pc;
+	m_Move.x = (LONG)m_Pos.x;
+	m_Move.y = (LONG)m_Pos.y;
+	m_Name = "Inyo";
+	m_Shape = "[]";
+	m_Speed = 5;
+	m_Hp = 100;
+	m_Mp = 100;
+	m_Damage = 20;
+	m_MaxHp = m_Hp;
+	m_MaxMp = m_Mp;
 }
 Inyo::~Inyo(){}

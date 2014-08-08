@@ -1,4 +1,10 @@
 #pragma once
+enum PlayerType
+{
+	COMPUTER,
+	PLAYER_1,
+	PLAYER_2,
+};
 struct POINT_D
 {
 	DOUBLE  x;
@@ -9,39 +15,39 @@ class Unit
 {
 public:
 	Unit();
-	Unit(std::string name, std::string shape, double speed, int hp, int mp, int damage);
+	Unit(std::string m_Name, std::string m_Shape, double m_Speed, int m_Hp, int m_Mp, int m_Damage);
 	Unit(const Unit &pc);
 	~Unit();
 
-	POINT nowPos(void) { return pos; }
-	bool deadCheck(void) { return is_dead; }
+	POINT NowPos(void) { return m_Pos; }
+	bool DeadCheck(void) { return m_IsDead; }
 
-	void setPlayerType(int type);
-	void setTeamType(int type);
-	int checkPlayerType(void);
-	int checkTeamType(void);
+	void SetPlayerType(int type);
+	void SetTeamType(int type);
+	int CheckPlayerType(void);
+	int CheckTeamType(void);
 
-	bool useMp(int need_mp);
-	int attack(void);
-	void showPos(void);
-	void ai(int reduce);
-	void moveType(void);
-	void moveAction(POINT_D &move);
-	void beAttacked(int damage_earn, int attack_player);
+	bool UseMp(int need_mp);
+	int Attack(void);
+	void ShowPos(void);
+	void Ai(int reduce);
+	void MoveType(void);
+	void MoveAction(POINT_D &move);
+	void BeAttacked(int damage_earn, int attack_player);
 protected:
-	Player* owner;
-	POINT pos;
-	POINT to_pos;
-	POINT_D move;
-	POINT_D move_power;
-	static POINT_D public_move;
+	PlayerType m_Owner;
+	POINT m_Pos;
+	POINT m_ToPos;
+	POINT_D m_Move;
+	POINT_D m_MovePower;
+	static POINT_D m_PublicMove;
 
-	std::string name;
-	std::string shape;
+	std::string m_Name;
+	std::string m_Shape;
 
-	double speed;
-	int hp;
-	int mp;
-	int damage;
-	bool is_dead;
+	double m_Speed;
+	int m_Hp;
+	int m_Mp;
+	int m_Damage;
+	bool m_IsDead;
 };
