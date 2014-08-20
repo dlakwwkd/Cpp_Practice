@@ -1,9 +1,5 @@
 #pragma once
 #include "console.h"
-extern std::vector<POINT> hitColor;
-extern std::vector<POINT> deathColor;
-extern std::vector<POINT> heroColor;
-extern std::vector<POINT> scopeColor;
 
 class Print
 {
@@ -13,16 +9,18 @@ public:
 		static Print instance;
 		return instance;
 	}
-	char m_ScreenBuffer[PLAY_LINES + 1][CONSOLE_COLS + 1];
-
 	void InText(int x, int y, std::string text);
+	void InColor(int x, int y, Color type);
 	void Init(void);
 	void PrintText(void);
 	void PrintColor(void);
 	void PrintTop(void);
 	void PrintBottom(void);
-
-	void FrameCheck(void);
 private:
 	Print();
+	std::vector<POINT> m_HitColor;
+	std::vector<POINT> m_DeathColor;
+	std::vector<POINT> m_HeroColor;
+	std::vector<POINT> m_SopeColor;
+	char m_ScreenBuffer[PLAY_LINES + 1][CONSOLE_COLS + 1];
 };

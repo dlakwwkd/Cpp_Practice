@@ -1,10 +1,4 @@
 #pragma once
-enum PlayerType
-{
-	COMPUTER,
-	PLAYER_1,
-	PLAYER_2,
-};
 struct POINT_D
 {
 	DOUBLE  x;
@@ -35,18 +29,18 @@ public:
 	void MoveAction(POINT_D &move);
 	void BeAttacked(int damage_earn, int attack_player);
 protected:
-	PlayerType m_Owner;
-	POINT m_Pos;
-	POINT m_ToPos;
-	POINT_D m_Move;
-	POINT_D m_MovePower;
-	static POINT_D m_PublicMove;
+	PlayerType		m_Owner;
+	POINT			m_Pos;
+	POINT			m_ToPos;
+	POINT_D			m_Move;
+	POINT_D			m_MovePower;
+	static POINT_D	m_PublicMove;
 
 	std::string m_Name;
 	std::string m_Shape;
 
 	double m_Speed;
-	int m_Hp;
+	int	m_Hp;
 	int m_Mp;
 	int m_Damage;
 	bool m_IsDead;

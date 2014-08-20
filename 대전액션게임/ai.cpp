@@ -16,7 +16,7 @@ void MoveAi(void)
 		break;
 	case MobMoveForm(MASS):
 		i = rand() % mob.size();
-		mob.at(i).Ai(30);
+		mob.at(i)->Ai(30);
 		break;
 	}
 
@@ -25,22 +25,26 @@ void MoveAi(void)
 		switch (gameMode)
 		{
 		case MobMoveForm(SCATTER):
-			if (rand() % 20 - gameLevel*3 == 0)
-				mob.at(i).Ai(20);
-			mob.at(i).MoveType();
+			if (rand() % 20 - gameLevel * 3 == 0)
+				mob.at(i)->Ai(20);
+			mob.at(i)->MoveType();
 			break;
 		case MobMoveForm(MASS):
-			if (rand() % 10 - gameLevel/2 == 0)
-				mob.at(i).MoveType();
+			if (rand() % 10 - gameLevel / 2 == 0)
+				mob.at(i)->MoveType();
 			break;
 		}
-		mob.at(i).ShowPos();
+		mob.at(i)->ShowPos();
 
 		if (playerNum > 0)
-			hero[PLAYER_1].HitCheck(i);
+			hero[PLAYER_1]->HitCheck(i);
 		if (playerNum > 1)
-			hero[PLAYER_2].HitCheck(i);
+			hero[PLAYER_2]->HitCheck(i);
 
-		if (mob.at(i).DeadCheck()) mob.erase(mob.begin() + i);
+		if (mob.at(i)->DeadCheck())
+		{
+			delete mob.at(i);
+			mob.erase(mob.begin() + i);
+		}
 	}
 }

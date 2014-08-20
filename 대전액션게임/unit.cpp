@@ -2,6 +2,7 @@
 #include "console.h"
 #include "setting.h"
 #include "Print.h"
+#include "Frame.h"
 
 POINT_D Unit::m_PublicMove = { 0, 0 };
 
@@ -14,7 +15,7 @@ m_Owner(PlayerType(COMPUTER)), m_Pos({ 0, 0 }), m_ToPos({ 0, 0 }), m_Move({ 0, 0
 m_Name(m_Name), m_Shape(m_Shape), m_Speed(m_Speed), m_Hp(m_Hp), m_Mp(m_Mp), m_Damage(m_Damage), m_IsDead(false){}
 
 Unit::Unit(const Unit &pc) :
-m_Owner(PlayerType(COMPUTER)), m_Pos(pc.m_Pos), m_ToPos(pc.m_ToPos), m_Move(pc.m_Move), m_MovePower(pc.m_MovePower),
+m_Owner(pc.m_Owner), m_Pos(pc.m_Pos), m_ToPos(pc.m_ToPos), m_Move(pc.m_Move), m_MovePower(pc.m_MovePower),
 m_Name(pc.m_Name), m_Shape(pc.m_Shape), m_Speed(pc.m_Speed), m_Hp(pc.m_Hp), m_Mp(pc.m_Mp), m_Damage(pc.m_Damage), m_IsDead(pc.m_IsDead){}
 
 Unit::~Unit()
@@ -58,9 +59,9 @@ void Unit::Ai(int reduce)
 	if (rand() % (7 - gameLevel) == 0)
 	{
 		if (rand() % playerNum == 0)
-			m_ToPos = hero[PLAYER_1].NowPos();
+			m_ToPos = hero[PLAYER_1]->NowPos();
 		else
-			m_ToPos = hero[PLAYER_2].NowPos();
+			m_ToPos = hero[PLAYER_2]->NowPos();
 	}
 	else
 	{
@@ -84,44 +85,44 @@ void Unit::MoveType(void)
 }
 void Unit::MoveAction(POINT_D &move)
 {
-	if (m_MovePower.x > 1 || m_MovePower.x < -1) m_MovePower.x -= m_MovePower.x * (deltaTime / 300);
+	if (m_MovePower.x > 1 || m_MovePower.x < -1) m_MovePower.x -= m_MovePower.x * (Frame::get().GetDeltaTime() / 300);
 	else m_MovePower.x = 0;
 
-	if (m_MovePower.y > 1 || m_MovePower.y < -1) m_MovePower.y -= m_MovePower.y * (deltaTime / 300);
+	if (m_MovePower.y > 1 || m_MovePower.y < -1) m_MovePower.y -= m_MovePower.y * (Frame::get().GetDeltaTime() / 300);
 	else m_MovePower.y = 0;
 
 	if (m_MovePower.x)
 	{
-		m_Move.x += m_MovePower.x * (deltaTime / 200);
+		move.x += m_MovePower.x * (Frame::get().GetDeltaTime() / 200);
 
-		if (m_Move.x < 0)
-			m_Move.x = 0;
-		else if (m_Move.x > PLAY_COLS)
-			m_Move.x = PLAY_COLS;
+		if (move.x < 0)
+			move.x = 0;
+		else if (move.x > PLAY_COLS)
+			move.x = PLAY_COLS;
 	}
 	if (m_MovePower.y)
 	{
-		m_Move.y += m_MovePower.y * (deltaTime / 200);
+		move.y += m_MovePower.y * (Frame::get().GetDeltaTime() / 200);
 
-		if (m_Move.y < 0)
-			m_Move.y = 0;
-		else if (m_Move.y > PLAY_LINES)
-			m_Move.y = PLAY_LINES;
+		if (move.y < 0)
+			move.y = 0;
+		else if (move.y > PLAY_LINES)
+			move.y = PLAY_LINES;
 	}
-	m_Pos = { (LONG)m_Move.x, (LONG)m_Move.y };
+	m_Pos = { (LONG)move.x, (LONG)move.y };
 }
 void Unit::BeAttacked(int damage_earn, int attack_player)
 {
 	if (m_Hp > damage_earn) m_Hp -= damage_earn;
 	else m_Hp = 0;
-	hitColor.push_back({ m_Pos.x, m_Pos.y });
+	Print::get().InColor(m_Pos.x, m_Pos.y, HIT);
 	if (m_Hp <= 0)
 	{
-		deathColor.push_back({ m_Pos.x, m_Pos.y });
+		Print::get().InColor(m_Pos.x, m_Pos.y, DEATH);
 		Print::get().InText(m_Pos.x, m_Pos.y, "00");
 		m_IsDead = true;
 
 		if (attack_player != PlayerType(COMPUTER))
-			hero[attack_player].LevelUp();
+			hero[attack_player]->LevelUp();
 	}
 }

@@ -81,13 +81,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ai.h" />
-    <ClInclude Include="command.h" />
     <ClInclude Include="console.h" />
     <ClInclude Include="Dummy.h" />
+    <ClInclude Include="enum.h" />
+    <ClInclude Include="Frame.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="Inyo.h" />
     <ClInclude Include="Key.h" />
-    <ClInclude Include="play.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Print.h" />
     <ClInclude Include="setting.h" />
     <ClInclude Include="Skill.h" />
@@ -98,13 +100,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ai.cpp" />
-    <ClCompile Include="command.cpp" />
     <ClCompile Include="console.cpp" />
     <ClCompile Include="Dummy.cpp" />
+    <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="Inyo.cpp" />
     <ClCompile Include="Key.cpp" />
-    <ClCompile Include="play.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Print.cpp" />
     <ClCompile Include="setting.cpp" />
     <ClCompile Include="Skill.cpp" />

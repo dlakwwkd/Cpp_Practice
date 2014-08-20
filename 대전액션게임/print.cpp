@@ -1,15 +1,14 @@
 #include "stdafx.h"
-#include "console.h"
-#include "setting.h"
 #include "Print.h"
-
-std::vector<POINT> hitColor;
-std::vector<POINT> deathColor;
-std::vector<POINT> heroColor;
-std::vector<POINT> scopeColor;
+#include "setting.h"
 
 Print::Print()
 {
+	m_HeroColor.reserve(MAX_PLAYER_NUM);
+	m_SopeColor.reserve(MAX_PLAYER_NUM);
+	m_HitColor.reserve(MAX_MOB_NUM);
+	m_DeathColor.reserve(MAX_MOB_NUM);
+
 	int x, y;
 	for (y = 0; y <= PLAY_LINES; y++)
 	{
@@ -26,6 +25,27 @@ void Print::InText(int x, int y, std::string text)
 		m_ScreenBuffer[y][i] = text[i - x];
 }
 
+void Print::InColor(int x, int y, Color type)
+{
+	switch (type)
+	{
+	case HERO:
+		m_HeroColor.push_back({ x, y });
+		break;
+	case SCORP:
+		m_SopeColor.push_back({ x, y });
+		break;
+	case HIT:
+		m_HitColor.push_back({ x, y });
+		break;
+	case DEATH:
+		m_DeathColor.push_back({ x, y });
+		break;
+	default:
+		break;
+	}
+}
+
 void Print::Init()
 {
 	int x, y;
@@ -35,7 +55,7 @@ void Print::Init()
 			m_ScreenBuffer[y][x] = ' ';
 		m_ScreenBuffer[y][x] = '\0';
 	}
-	Setcolor(DefColor(SCREEN));
+	Setcolor(Color(SCREEN));
 }
 
 void Print::PrintText()
@@ -45,49 +65,49 @@ void Print::PrintText()
 		printf("%s", m_ScreenBuffer[y]);
 }
 
-void Print::PrintColor(void)
+void Print::PrintColor()
 {
-	if (!heroColor.empty())
+	if (!m_HeroColor.empty())
 	{
-		Setcolor(14);
-		while (!heroColor.empty())
+		Setcolor(Color(HERO));
+		while (!m_HeroColor.empty())
 		{
-			Gotoxy(heroColor.back().x, heroColor.back().y + 1);
-			_putch(m_ScreenBuffer[heroColor.back().y][heroColor.back().x]);
-			_putch(m_ScreenBuffer[heroColor.back().y][heroColor.back().x + 1]);
-			heroColor.pop_back();
+			Gotoxy(m_HeroColor.back().x, m_HeroColor.back().y + 1);
+			_putch(m_ScreenBuffer[m_HeroColor.back().y][m_HeroColor.back().x]);
+			_putch(m_ScreenBuffer[m_HeroColor.back().y][m_HeroColor.back().x + 1]);
+			m_HeroColor.pop_back();
 		}
 	}
-	if (!scopeColor.empty())
+	if (!m_SopeColor.empty())
 	{
-		Setcolor(11);
-		while (!scopeColor.empty())
+		Setcolor(Color(SCORP));
+		while (!m_SopeColor.empty())
 		{
-			Gotoxy(scopeColor.back().x, scopeColor.back().y + 1);
-			_putch(m_ScreenBuffer[scopeColor.back().y][scopeColor.back().x]);
-			scopeColor.pop_back();
+			Gotoxy(m_SopeColor.back().x, m_SopeColor.back().y + 1);
+			_putch(m_ScreenBuffer[m_SopeColor.back().y][m_SopeColor.back().x]);
+			m_SopeColor.pop_back();
 		}
 	}
-	if (!hitColor.empty())
+	if (!m_HitColor.empty())
 	{
-		Setcolor(218);
-		while (!hitColor.empty())
+		Setcolor(Color(HIT));
+		while (!m_HitColor.empty())
 		{
-			Gotoxy(hitColor.back().x, hitColor.back().y + 1);
-			_putch(m_ScreenBuffer[hitColor.back().y][hitColor.back().x]);
-			_putch(m_ScreenBuffer[hitColor.back().y][hitColor.back().x + 1]);
-			hitColor.pop_back();
+			Gotoxy(m_HitColor.back().x, m_HitColor.back().y + 1);
+			_putch(m_ScreenBuffer[m_HitColor.back().y][m_HitColor.back().x]);
+			_putch(m_ScreenBuffer[m_HitColor.back().y][m_HitColor.back().x + 1]);
+			m_HitColor.pop_back();
 		}
 	}
-	if (!deathColor.empty())
+	if (!m_DeathColor.empty())
 	{
-		Setcolor(76);
-		while (!deathColor.empty())
+		Setcolor(Color(DEATH));
+		while (!m_DeathColor.empty())
 		{
-			Gotoxy(deathColor.back().x, deathColor.back().y + 1);
-			_putch(m_ScreenBuffer[deathColor.back().y][deathColor.back().x]);
-			_putch(m_ScreenBuffer[deathColor.back().y][deathColor.back().x + 1]);
-			deathColor.pop_back();
+			Gotoxy(m_DeathColor.back().x, m_DeathColor.back().y + 1);
+			_putch(m_ScreenBuffer[m_DeathColor.back().y][m_DeathColor.back().x]);
+			_putch(m_ScreenBuffer[m_DeathColor.back().y][m_DeathColor.back().x + 1]);
+			m_DeathColor.pop_back();
 		}
 	}
 	Sleep(20 / (1 + lowSpecMode));
@@ -96,61 +116,49 @@ void Print::PrintColor(void)
 void Print::PrintTop()
 {
 	Gotoxy(0, 0);
-	Setcolor(DefColor(TOP_BAR));
+	Setcolor(Color(TOP_BAR));
 	if (hero.empty())
 		printf("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
 	else
 	{
 		if (playerNum == 1)
 			printf(" \t  Stage%4d   \t\t\t    ENTER: 다음 라운드         ESC: 처음으로   \t\t\t\t     남은 생명: %d  \t      ",
-			gameStage, hero[PLAYER_1].HavingHeart());
+			gameStage, hero[PLAYER_1]->HavingHeart());
 		else
 			printf(" \t  Stage%4d   \t\t\t   ENTER: 다음 라운드      ESC: 처음으로   \t\t\t   1P 생명: %d      2P 생명: %d      ",
-			gameStage, hero[PLAYER_1].HavingHeart(), hero[PLAYER_2].HavingHeart());
+			gameStage, hero[PLAYER_1]->HavingHeart(), hero[PLAYER_2]->HavingHeart());
 	}
 }
 
 void Print::PrintBottom()
 {
 	Gotoxy(0, PLAY_LINES + 2);
-	Setcolor(DefColor(BOTTOM));
+	Setcolor(Color(BOTTOM));
 	printf("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
-	Setcolor(DefColor(STATUS_BAR));
 	if (hero.empty())
 	{
+		Setcolor(Color(STATUS_BAR));
 		printf("\t\t\t\t     확인: Enter Key or Z key  \t\t    취소: ESC key or X key  \t\t\t\t\t");
 		printf("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
 	}
 	else
 	{
-		hero[PLAYER_1].HpStatus();
+		Setcolor(Color(HP_BAR));
+		hero[PLAYER_1]->HpStatus();
 		printf("   ");
 		if (playerNum > 1)
-			hero[PLAYER_2].HpStatus();
+			hero[PLAYER_2]->HpStatus();
 		else
 			printf(" \t\t 공격 : Z key    조준 : X key   \t\t\t");
-		hero[PLAYER_1].MpStatus();
+		Setcolor(Color(MP_BAR));
+		hero[PLAYER_1]->MpStatus();
 		printf("   ");
 		if (playerNum > 1)
-			hero[PLAYER_2].MpStatus();
+			hero[PLAYER_2]->MpStatus();
 		else
 			printf(" \t\t 스킬1: X -> Z   스킬2: X -> C  \t\t\t");
 	}
-	Setcolor(DefColor(BOTTOM));
+	Setcolor(Color(BOTTOM));
 	printf("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
-	Setcolor(DefColor(SCREEN));
-}
-
-void Print::FrameCheck()
-{
-	gameFrame++;
-	if (time(NULL) - gameTime >= 1){
-		PrintTop();
-		PrintBottom();
-		Gotoxy(0, CONSOLE_LINES);
-		Setcolor(15);
-		printf("Frame: %d   mob:%5d\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   ", gameFrame, mob.size());
-		gameTime = (unsigned int)time(NULL);
-		gameFrame = 0;
-	}
+	Setcolor(Color(SCREEN));
 }

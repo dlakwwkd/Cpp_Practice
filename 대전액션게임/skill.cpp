@@ -25,6 +25,11 @@ int Skill::CheckPlayerType(void)
 	return m_Owner;
 }
 
+int Skill::CheckCooldown(void)
+{
+	return m_Cooldown;
+}
+
 void Skill::SkillEffect(int effect_color)
 {
 	m_Cooldown--;
@@ -50,7 +55,7 @@ void Skill::SkillEffect(int effect_color)
 		m_Rect.right += (PLAY_COLS + 1) - m_Rect.right;
 	}
 
-	if (hero[this->CheckPlayerType()].UseMp(m_NeedMana))
+	if (hero[m_Owner]->UseMp(m_NeedMana))
 	{
 		int i, j;
 		for (j = m_Rect.top; j <= m_Rect.bottom; j++)
@@ -63,7 +68,7 @@ void Skill::SkillEffect(int effect_color)
 				{
 					_putch('#');
 				}
-				Setcolor(DefColor(SCREEN));
+				Setcolor(Color(SCREEN));
 			}
 			else if (j == m_Rect.top + 1 || j == m_Rect.bottom - 1)
 			{
@@ -73,7 +78,7 @@ void Skill::SkillEffect(int effect_color)
 				{
 					_putch('#');
 				}
-				Setcolor(DefColor(SCREEN));
+				Setcolor(Color(SCREEN));
 			}
 			else
 			{
@@ -83,7 +88,7 @@ void Skill::SkillEffect(int effect_color)
 				{
 					_putch('#');
 				}
-				Setcolor(DefColor(SCREEN));
+				Setcolor(Color(SCREEN));
 			}
 		}
 
@@ -91,31 +96,36 @@ void Skill::SkillEffect(int effect_color)
 		{
 			for (unsigned int i = 0; i < mob.size(); i++)
 			{
-				if (PtInRect(&m_Rect, mob.at(i).NowPos()))
-					mob.at(i).BeAttacked(m_Damage, this->CheckPlayerType());
+				if (PtInRect(&m_Rect, mob.at(i)->NowPos()))
+					mob.at(i)->BeAttacked(m_Damage, m_Owner);
 			}
 		}
+
 		//임시 구현
-		if (this->CheckPlayerType() == PLAYER_1)
+		if (hero.size() > 1)
 		{
-			if (PtInRect(&m_Rect, hero[PLAYER_2].NowPos()))
+			if (m_Owner == PLAYER_1)
 			{
-				hero[PLAYER_2].BeAttacked(m_Damage, this->CheckPlayerType());
-				Print::get().PrintBottom();
+				if (PtInRect(&m_Rect, hero[PLAYER_2]->NowPos()))
+				{
+					hero[PLAYER_2]->BeAttacked(m_Damage, m_Owner);
+					Print::get().PrintBottom();
+				}
+				else
+					Sleep(gameSpeed * 5 / (1 + lowSpecMode));
 			}
-			else
-				Sleep(gameSpeed * 5 / (1 + lowSpecMode));
-		}
-		else if (this->CheckPlayerType() == PLAYER_2)
-		{
-			if (PtInRect(&m_Rect, hero[PLAYER_1].NowPos()))
+			else if (m_Owner == PLAYER_2)
 			{
-				hero[PLAYER_1].BeAttacked(m_Damage, this->CheckPlayerType());
-				Print::get().PrintBottom();
+				if (PtInRect(&m_Rect, hero[PLAYER_1]->NowPos()))
+				{
+					hero[PLAYER_1]->BeAttacked(m_Damage, m_Owner);
+					Print::get().PrintBottom();
+				}
+				else
+					Sleep(gameSpeed * 5 / (1 + lowSpecMode));
 			}
-			else
-				Sleep(gameSpeed * 5 / (1 + lowSpecMode));
 		}
+		else Sleep(gameSpeed * 5 / (1 + lowSpecMode));
 
 		m_Rect.top -= m_Cooldown;
 		m_Rect.bottom += m_Cooldown;
@@ -126,33 +136,28 @@ void Skill::SkillEffect(int effect_color)
 void Skill::SkillUse(void)
 {
 	if (m_Name == "Z")
-		SkillEffect(SkillEffectColor(SKY_BLUE));
+		SkillEffect(Color(SKY_BLUE));
 	else if (m_Name == "C")
 	{
 		m_Cooldown--;
 
-		Skill c_dummy("C_dummy",
-		{ dummy.back().NowPos().x - 6, dummy.back().NowPos().y - 2,
-		dummy.back().NowPos().x + 7, dummy.back().NowPos().y + 4 },
+		Skill* c_dummy = new Skill("C_dummy",
+		{ dummy[m_Owner].back()->NowPos().x - 6, dummy[m_Owner].back()->NowPos().y - 2,
+		dummy[m_Owner].back()->NowPos().x + 7, dummy[m_Owner].back()->NowPos().y + 4 },
 		20, 3, 2);
-		skill.push(c_dummy);
-		skill.back().SetPlayerType(this->CheckPlayerType());
+		skill[m_Owner].push(c_dummy);
+		skill[m_Owner].back()->SetPlayerType(m_Owner);
 
 		if (m_Cooldown < 1){
-			while (!dummy.empty())
+			while (!dummy[m_Owner].empty())
 			{
-				dummy.pop();
+				delete dummy[m_Owner].front();
+				dummy[m_Owner].pop();
 			}
 		}
 	}
 	else if (m_Name == "C_dummy")
 	{
-		SkillEffect(SkillEffectColor(RED_YELLO));
-	}
-
-	if (m_Cooldown < 1)
-	{
-		if (!skill.empty())
-			skill.pop();
+		SkillEffect(Color(RED_YELLO));
 	}
 }

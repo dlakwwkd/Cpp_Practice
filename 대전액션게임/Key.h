@@ -3,24 +3,23 @@ class Key
 {
 public:
 	Key();
-	~Key();
 
-	void SetUp(int input);
-	void SetDown(int input);
-	void SetLeft(int input);
-	void SetRight(int input);
-	void SetZ(int input);
-	void SetX(int input);
-	void SetC(int input);
-	void SetV(int input);
-	int GetUp(void);
-	int GetDown(void);
-	int GetLeft(void);
-	int GetRight(void);
-	int GetZ(void);
-	int GetX(void);
-	int GetC(void);
-	int GetV(void);
+	void SetUp(int input) { up = input; }
+	void SetDown(int input) { down = input; }
+	void SetLeft(int input) { left = input; }
+	void SetRight(int input) { right = input; }
+	void SetZ(int input) { z = input; }
+	void SetX(int input) { x = input; }
+	void SetC(int input) { c = input; }
+	void SetV(int input) { v = input; }
+	int GetUp(void) { return up; }
+	int GetDown(void) { return down; }
+	int GetLeft(void) { return left; }
+	int GetRight(void) { return right; }
+	int GetZ(void) { return z; }
+	int GetX(void) { return x; }
+	int GetC(void) { return c; }
+	int GetV(void) { return v; }
 private:
 	int up;
 	int down;

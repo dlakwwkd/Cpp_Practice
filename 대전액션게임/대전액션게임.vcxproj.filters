@@ -1,112 +1,117 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="클래스">
+    <Filter Include="Object">
       <UniqueIdentifier>{f4b0e4fb-aa62-4841-b9aa-42404b121989}</UniqueIdentifier>
     </Filter>
-    <Filter Include="클래스\유닛">
+    <Filter Include="Object\Unit">
       <UniqueIdentifier>{2270ed6e-2d1b-4fce-95d7-2eff483603fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Effect">
+      <UniqueIdentifier>{0ba9acec-403e-4fc1-aea7-fc40ae3ddf33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Base">
+      <UniqueIdentifier>{6aa6e165-39fd-4191-9e9b-45bf1d359efb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Setting">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Print.h">
-      <Filter>클래스</Filter>
-    </ClInclude>
-    <ClInclude Include="Skill.h">
-      <Filter>클래스</Filter>
-    </ClInclude>
     <ClInclude Include="Hero.h">
-      <Filter>클래스\유닛</Filter>
+      <Filter>Object\Unit</Filter>
     </ClInclude>
     <ClInclude Include="Inyo.h">
-      <Filter>클래스\유닛</Filter>
+      <Filter>Object\Unit</Filter>
     </ClInclude>
     <ClInclude Include="Unit.h">
-      <Filter>클래스\유닛</Filter>
+      <Filter>Object\Unit</Filter>
     </ClInclude>
     <ClInclude Include="Dummy.h">
-      <Filter>클래스\유닛</Filter>
+      <Filter>Object\Unit</Filter>
     </ClInclude>
     <ClInclude Include="ai.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="command.h">
-      <Filter>소스 파일</Filter>
+      <Filter>Setting</Filter>
     </ClInclude>
     <ClInclude Include="console.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="play.h">
-      <Filter>소스 파일</Filter>
+      <Filter>Setting</Filter>
     </ClInclude>
     <ClInclude Include="setting.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>소스 파일</Filter>
+      <Filter>Setting</Filter>
     </ClInclude>
     <ClInclude Include="ui.h">
-      <Filter>소스 파일</Filter>
+      <Filter>Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>Object\Effect</Filter>
     </ClInclude>
     <ClInclude Include="Key.h">
-      <Filter>클래스</Filter>
+      <Filter>Object\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Print.h">
+      <Filter>Object\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="enum.h" />
+    <ClInclude Include="Frame.h">
+      <Filter>Object\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Object\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Object\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="ui.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Setting</Filter>
     </ClCompile>
     <ClCompile Include="console.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="command.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="play.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Setting</Filter>
     </ClCompile>
     <ClCompile Include="ai.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Setting</Filter>
     </ClCompile>
     <ClCompile Include="setting.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Print.cpp">
-      <Filter>클래스</Filter>
-    </ClCompile>
-    <ClCompile Include="Skill.cpp">
-      <Filter>클래스</Filter>
+      <Filter>Setting</Filter>
     </ClCompile>
     <ClCompile Include="Hero.cpp">
-      <Filter>클래스\유닛</Filter>
+      <Filter>Object\Unit</Filter>
     </ClCompile>
     <ClCompile Include="Inyo.cpp">
-      <Filter>클래스\유닛</Filter>
+      <Filter>Object\Unit</Filter>
     </ClCompile>
     <ClCompile Include="Unit.cpp">
-      <Filter>클래스\유닛</Filter>
+      <Filter>Object\Unit</Filter>
     </ClCompile>
     <ClCompile Include="Dummy.cpp">
-      <Filter>클래스\유닛</Filter>
+      <Filter>Object\Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>Object\Effect</Filter>
     </ClCompile>
     <ClCompile Include="Key.cpp">
-      <Filter>클래스</Filter>
+      <Filter>Object\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Print.cpp">
+      <Filter>Object\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Frame.cpp">
+      <Filter>Object\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Object\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Object\Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

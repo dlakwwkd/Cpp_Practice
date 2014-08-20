@@ -11,6 +11,7 @@
 #include <tchar.h>
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
+
 #include <windows.h>
 #include <conio.h>
 #include <time.h>
@@ -20,3 +21,4 @@
 #include <queue>
 #include <map>
 
+#include "enum.h"

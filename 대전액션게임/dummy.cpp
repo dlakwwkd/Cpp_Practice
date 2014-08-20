@@ -24,12 +24,12 @@ void Dummy::ShowPos(void)
 {
 	if (m_IsDead) return;
 	if (!lowSpecMode)
-		scopeColor.push_back({ m_Pos.x, m_Pos.y });
+		Print::get().InColor(m_Pos.x, m_Pos.y, SCORP);
 	Print::get().InText(m_Pos.x, m_Pos.y, m_Shape);
 }
 void Dummy::Ai(int reduce)
 {
-	m_ToPos = dummy.front().m_Pos;
+	m_ToPos = dummy[m_Owner].front()->m_Pos;
 
 	m_MovePower.x = (m_ToPos.x - m_Pos.x) * m_Speed / reduce;
 	m_MovePower.y = (m_ToPos.y - m_Pos.y) * m_Speed / reduce;

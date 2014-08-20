@@ -1,11 +1,4 @@
 #pragma once
-enum SkillEffectColor
-{
-	RED_YELLO = 206,
-	SKY_BLUE = 191,
-	GREEN_YELLO = 174
-};
-
 class Skill
 {
 public:
@@ -18,13 +11,14 @@ public:
 	void SetTeamType(int type);
 	int CheckPlayerType(void);
 	int CheckTeamType(void);
+	int CheckCooldown(void);
 
 	void SkillEffect(int effect_color);
 	void SkillUse(void);
 protected:
-	PlayerType m_Owner;
-	RECT m_Rect;
-	std::string m_Name;
+	PlayerType	 m_Owner;
+	RECT		 m_Rect;
+	std::string	 m_Name;
 	int m_Damage;
 	int m_NeedMana;
 	int m_Cooldown;
