@@ -187,20 +187,20 @@ void Menu::MenuIn(void)
 				}
 				break;
 			case MenuType(LOW_SPEC):
-				if (m_SideMenu[m_Menu] < m_MenuNum[LOW_SPEC])
+				if (m_SideMenu[m_Menu] == OFF)
 				{
-					m_SideMenu[m_Menu]++;
-					lowSpecMode = m_SideMenu[m_Menu];
+					m_SideMenu[m_Menu] = ON;
+					lowSpecMode = ON;
 				}
 				else
 				{
-					m_SideMenu[m_Menu] = 1;
-					lowSpecMode = m_SideMenu[m_Menu];
+					m_SideMenu[m_Menu] = OFF;
+					lowSpecMode = OFF;
 				}
 				break;
 			}
 		}
-		break;
+		return;
 	case SELECT_PLAYER:
 		if (m_Menu == m_MenuNum[m_MenuType])
 		{
@@ -263,6 +263,7 @@ void Menu::MenuIn(void)
 			m_GM->SetGamePlay(OFF);
 			m_MenuType = MAIN;
 			m_On = FALSE;
+			break;
 		}
 		if (hero[m_PlayerCount]->HavingHeart() > 0)
 		{
@@ -338,13 +339,13 @@ void Menu::OptionMenuPrint(void)
 	}
 
 	Print::get().InText(CONSOLE_COLS / 2, CONSOLE_LINES / 5 * 2,
-		m_MenuList[GAME_SPEED][m_SideMenu[m_SideMenuType[GAME_SPEED]]]);
+		m_MenuList[GAME_SPEED][m_SideMenu[1]]);
 
 	Print::get().InText(CONSOLE_COLS / 2, CONSOLE_LINES / 5 * 2 + 1,
-		m_MenuList[LOW_SPEC][m_SideMenu[m_SideMenuType[LOW_SPEC]]]);
+		m_MenuList[LOW_SPEC][m_SideMenu[2]]);
 
-	gameSpeed = m_SideMenu[m_SideMenuType[GAME_SPEED]];
-	lowSpecMode = m_SideMenu[m_SideMenuType[LOW_SPEC]];
+	gameSpeed = m_SideMenu[1];
+	lowSpecMode = m_SideMenu[2];
 }
 
 void Menu::PausePrint(void)

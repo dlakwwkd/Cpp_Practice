@@ -23,7 +23,7 @@ GameManager::~GameManager()
 }
 
 
-void GameManager::InitPlay(void)
+void GameManager::InitPlay()
 {
 	srand((unsigned int)time(NULL));
 	gameStage = 1;
@@ -69,7 +69,7 @@ void GameManager::HeroCreate(int player_num)
 	}
 }
 
-void GameManager::Respawne(void)
+void GameManager::Respawne()
 {
 	if (gameStage % 5 == 0) gameMode = MobMoveForm(MASS);
 	else gameMode = MobMoveForm(SCATTER);
@@ -97,7 +97,7 @@ void GameManager::Respawne(void)
 
 }
 
-void GameManager::GameRunLoop(void)
+void GameManager::GameRunLoop()
 {
 	while (m_GameRun)
 	{
@@ -124,7 +124,7 @@ void GameManager::GameRunLoop(void)
 	}
 }
 
-void GameManager::GamePlayLoop(void)
+void GameManager::GamePlayLoop()
 {
 	InitPlay();
 	while (m_GamePlay)
@@ -132,6 +132,7 @@ void GameManager::GamePlayLoop(void)
 		Print::get().PrintText();
 		Print::get().PrintColor();
 		Print::get().Init();
+
 		Frame::get().SetDeltaTime();
 		Frame::get().FrameCheck();
 
@@ -163,7 +164,7 @@ void GameManager::PlayerAction(int player_num)
 	}
 }
 
-void GameManager::PauseOption(void)
+void GameManager::PauseOption()
 {
 	PausePrint();
 	while (getchar() != '\n');
@@ -183,7 +184,7 @@ void GameManager::GameOver(int player_num)
 	Menu::get().MenuPlatform();
 }
 
-void GameManager::DeleteVestige(void)
+void GameManager::DeleteVestige()
 {
 	if (!hero.empty())
 	{

@@ -112,7 +112,7 @@ void Skill::SkillEffect(int effect_color)
 					Print::get().PrintBottom();
 				}
 				else
-					Sleep(gameSpeed * 5 / (1 + lowSpecMode));
+					Sleep(30 / (1 + lowSpecMode));
 			}
 			else if (m_Owner == PLAYER_2)
 			{
@@ -122,10 +122,10 @@ void Skill::SkillEffect(int effect_color)
 					Print::get().PrintBottom();
 				}
 				else
-					Sleep(gameSpeed * 5 / (1 + lowSpecMode));
+					Sleep(30 / (1 + lowSpecMode));
 			}
 		}
-		else Sleep(gameSpeed * 5 / (1 + lowSpecMode));
+		else Sleep(30 / (1 + lowSpecMode));
 
 		m_Rect.top -= m_Cooldown;
 		m_Rect.bottom += m_Cooldown;
